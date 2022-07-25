@@ -18,11 +18,11 @@ const Home: NextPage = () => {
               </h1>
               <h2 className='text-gray-700 dark:text-gray-200 mb-4'>
                 VP of Developer Experience at{' '}
-                <span className='font-semibold'>Vercel</span>
+                <span className='font-semibold'>Athlete</span>
               </h2>
               <p className='text-gray-600 dark:text-gray-400 mb-16'>
-                Helping developers build a faster web. Teaching about web
-                development, serverless, and React / Next.js.
+                "Helping developers build a faster web. Teaching about web
+                development, serverless, and React / Next.js." fixes this
               </p>
             </div>
             <div className='w-[80px] sm:w-[176px] relative mb-8 sm:mb-0 '>
