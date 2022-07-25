@@ -7,7 +7,9 @@ export default function LoginPage() {
 
   if (data !== 'ADMIN')
     return (
-      <h1>you ain't getting in bitch...you are a beta pussyhole bitch!!</h1>
+      <h1>
+        you ain&apos;t getting in bitch...you are a beta pussyhole bitch!!
+      </h1>
     );
 
   return <div>Admin only view</div>;
