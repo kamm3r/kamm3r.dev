@@ -1,5 +1,4 @@
-import { Post } from '@/utils/parseMdx';
-import { format, parse } from 'date-fns';
+import { Post } from '../utils/parseMdx';
 import Image from 'next/future/image';
 import { PropsWithChildren, Suspense } from 'react';
 import Layout from './Layout';
