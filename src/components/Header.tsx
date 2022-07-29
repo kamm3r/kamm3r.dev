@@ -32,13 +32,14 @@ export default function Header() {
   useEffect(() => setMounted(true), []);
 
   return (
-    <header className='flex flex-row justify-between items-center max-w-7xl py-6 sm:pb-16 z-10 mx-auto px-8'>
-      <nav className='flex items-center justify-between w-full relative max-w-7xl border-gray-200 dark:border-gray-700 mx-auto  text-gray-900 bg-gray-50  dark:bg-gray-900 bg-opacity-60 dark:text-gray-100'>
-        <figure className='flex justify-center items-center space-x-2'>
+    // fix navbar alignment...it is fucked like truely it is fucked
+    <header className='flex flex-row justify-between items-center max-w-7xl py-6 sm:pb-16 z-10 mx-auto px-8 md:px-0'>
+      <nav className='flex items-center justify-between w-full relative max-w-7xl border-gray-200 dark:border-gray-700 mx-auto text-gray-900 bg-gray-50  dark:bg-gray-900 bg-opacity-60 dark:text-gray-100'>
+        <figure className='flex justify-center items-center'>
           <Image src='/splat.svg' width={24} height={24} alt='logo' />
-          <h1 className='text-xl font-bold'>Marco Kammer</h1>
+          <h1 className='pl-2 text-xl font-bold'>Marco Kammer</h1>
         </figure>
-        <div className='-ml-[0.6rem]'>
+        <div className='ml-auto'>
           <MobileMenu />
           <NavLink href='/' text='Home' />
           {/* <NavLink href='#about' text='About' />
@@ -49,7 +50,7 @@ export default function Header() {
         <button
           aria-label='Toggle Dark Mode'
           type='button'
-          className='w-9 h-9 bg-gray-200 rounded-lg dark:bg-gray-600 flex items-center justify-center hover:ring-2 ring-gray-300 transition-all'
+          className='ml-2 w-9 h-9 bg-gray-200 rounded-lg dark:bg-gray-600 flex items-center justify-center hover:ring-2 ring-gray-300 transition-all'
           onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
         >
           {mounted && (
