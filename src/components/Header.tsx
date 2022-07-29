@@ -12,7 +12,11 @@ const NavLink: React.FC<{ href: string; text: string }> = ({ href, text }) => {
 
   return (
     <Link href={href}>
-      <a className={isActive ? 'font-bold text-lg' : 'text-lg'}>
+      <a
+        className={`${
+          isActive ? 'font-bold text-lg' : 'text-lg'
+        } hidden md:inline-block p-1 sm:px-3 sm:py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-all`}
+      >
         <span className='capsize'>{text}</span>
       </a>
     </Link>
@@ -28,22 +32,24 @@ export default function Header() {
   useEffect(() => setMounted(true), []);
 
   return (
-    <header className='flex flex-row justify-between max-w-7xl py-6 sm:pb-16 z-10 mx-auto'>
-      <figure className='flex justify-center items-center space-x-2'>
-        <Image src='/splat.svg' width={24} height={24} alt='logo' />
-        <h1 className='text-xl font-bold'>Marco Kammer</h1>
-      </figure>
-      <MobileMenu />
-      <nav className='hidden md:flex space-x-12 items-center'>
-        <NavLink href='/' text='Home' />
-        {/* <NavLink href='#about' text='About' />
+    <header className='flex flex-row justify-between items-center max-w-7xl py-6 sm:pb-16 z-10 mx-auto px-8'>
+      <nav className='flex items-center justify-between w-full relative max-w-7xl border-gray-200 dark:border-gray-700 mx-auto pt-8 pb-8 sm:pb-16  text-gray-900 bg-gray-50  dark:bg-gray-900 bg-opacity-60 dark:text-gray-100'>
+        <figure className='flex justify-center items-center space-x-2'>
+          <Image src='/splat.svg' width={24} height={24} alt='logo' />
+          <h1 className='text-xl font-bold'>Marco Kammer</h1>
+        </figure>
+        <div className='-ml-[0.6rem]'>
+          <MobileMenu />
+          <NavLink href='/' text='Home' />
+          {/* <NavLink href='#about' text='About' />
         <NavLink href='#work' text='Projects' /> */}
-        <NavLink href='/blog' text='Blog' />
-        <NavLink href='/contact' text='Contact' />
+          <NavLink href='/blog' text='Blog' />
+          <NavLink href='/contact' text='Contact' />
+        </div>
         <button
           aria-label='Toggle Dark Mode'
           type='button'
-          className='w-9 h-9 bg-gray-200 rounded-lg dark:bg-gray-600 flex items-center justify-center  hover:ring-2 ring-gray-300  transition-all'
+          className='w-9 h-9 bg-gray-200 rounded-lg dark:bg-gray-600 flex items-center justify-center hover:ring-2 ring-gray-300 transition-all'
           onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
         >
           {mounted && (

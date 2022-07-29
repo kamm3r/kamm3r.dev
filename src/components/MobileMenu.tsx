@@ -1,16 +1,17 @@
 import Link from 'next/link';
+import useDelayedRender from 'use-delayed-render';
 import { useEffect, useState } from 'react';
 import { CgClose, CgMenuRight } from 'react-icons/cg';
 
 export default function MobileMenu() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  //   const { mounted: isMenuMounted, rendered: isMenuRendered } = useDelayedRender(
-  //     isMenuOpen,
-  //     {
-  //       enterDelay: 20,
-  //       exitDelay: 300,
-  //     }
-  //   );
+  const { mounted: isMenuMounted, rendered: isMenuRendered } = useDelayedRender(
+    isMenuOpen,
+    {
+      enterDelay: 20,
+      exitDelay: 300,
+    }
+  );
 
   function toggleMenu() {
     if (isMenuOpen) {
@@ -31,19 +32,29 @@ export default function MobileMenu() {
   return (
     <>
       <button
-        className='visible md:hidden'
+        className='burger visible md:hidden'
         aria-label='Toggle menu'
         type='button'
         onClick={toggleMenu}
       >
         {isMenuOpen ? (
-          <CgClose className='text-4xl' />
+          <CgClose
+            className='svg text-3xl absolute text-gray-900 dark:text-gray-100'
+            data-hide={!isMenuOpen}
+          />
         ) : (
-          <CgMenuRight className='text-4xl' />
+          <CgMenuRight
+            className='svg text-3xl absolute text-gray-900 dark:text-gray-100'
+            data-hide={isMenuOpen}
+          />
         )}
       </button>
-      {isMenuOpen && (
-        <ul className='flex flex-col absolute bg-gray-100 dark:bg-gray-900'>
+      {isMenuMounted && (
+        <ul
+          className={`menu flex flex-col absolute bg-gray-100 dark:bg-gray-900 ${
+            isMenuRendered && 'menuRendered'
+          }`}
+        >
           <li
             className='border-b border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 text-sm font-semibold'
             style={{ transitionDelay: '150ms' }}
@@ -56,31 +67,15 @@ export default function MobileMenu() {
             className='border-b border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 text-sm font-semibold'
             style={{ transitionDelay: '175ms' }}
           >
-            <Link href='#about'>
-              <a className='flex w-auto pb-4'>About</a>
-            </Link>
-          </li>
-          <li
-            className='border-b border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 text-sm font-semibold'
-            style={{ transitionDelay: '200ms' }}
-          >
-            <Link href='/work'>
-              <a className='flex w-auto pb-4'>Projects</a>
-            </Link>
-          </li>
-          <li
-            className='border-b border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 text-sm font-semibold'
-            style={{ transitionDelay: '250ms' }}
-          >
             <Link href='/blog'>
               <a className='flex w-auto pb-4'>Blog</a>
             </Link>
           </li>
           <li
             className='border-b border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 text-sm font-semibold'
-            style={{ transitionDelay: '275ms' }}
+            style={{ transitionDelay: '200ms' }}
           >
-            <Link href='#hire'>
+            <Link href='/contact'>
               <a className='flex w-auto pb-4'>Contact</a>
             </Link>
           </li>
