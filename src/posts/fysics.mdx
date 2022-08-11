@@ -1,0 +1,66 @@
+---
+title: Fysics
+date: 2022-8-11
+excerpt: Typescript physics engine for kings
+---
+
+Typescript physics engine for kings
+
+## Introduction
+
+Fysics is 2D and 3D physics engine made in purely typescript...
+
+## Body
+
+### RigidBody
+
+Is solid body that doesn't defor or might slightly but it is barely noticeable.
+Usually used in character controllers
+
+basic React setup
+
+```ts
+import {RigidBody} from 'fysics/2d'
+import {RigidBody} from 'fysics/3d'
+
+function Character2d(){
+
+    return(
+        <RigidBody shape='Capsule' mass='1'>
+            <Sprite />
+        </RigidBody>
+    )
+function Character3d(){
+
+    return(
+        <RigidBody shape='Capsule' mass='1'>
+            <3DModel />
+        </RigidBody>
+    )
+}
+
+```
+
+### SoftBody
+
+Is focused on visually realistic physical simulations of the motions and properties of deformable objects.
+
+basic React setup
+
+```ts
+function Slime2d() {
+  return (
+    <SoftBody shape='Box' mass='1'>
+      <Box2d />
+    </SoftBody>
+  );
+}
+
+function Slime3d() {
+  return (
+    <SoftBody shape='Box' mass='1'>
+      <Box3d />
+    </SoftBody>
+  );
+}
+```

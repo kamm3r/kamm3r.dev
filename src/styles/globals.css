@@ -6,8 +6,18 @@
 @font-face {
     font-family: 'Inter';
     font-style: normal;
-    font-weight: 100, 900;
-    src: url(https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2)
+    font-weight: 900;
+    src: url(/static/Inter-Black.woff2)
+      format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+      U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+      U+FEFF, U+FFFD;
+  }
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    src: url(/static/Inter-Regular.woff2)
       format('woff2');
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
       U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
@@ -17,8 +27,18 @@
 @font-face {
     font-family: 'Inter';
     font-style: italic;
-    font-weight: 100, 900;
-    src: url(https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2)
+    font-weight: 900;
+    src: url(/static/Inter-BlackItalic.woff2)
+      format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+      U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+      U+FEFF, U+FFFD;
+  }
+@font-face {
+    font-family: 'Inter';
+    font-style: italic;
+    font-weight: 400;
+    src: url(/static/Inter-Italic.woff2)
       format('woff2');
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
       U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
@@ -31,13 +51,13 @@
   }
 
   html {
-    font-family: 'Inter';
+    font-family: 'Inter', sans-serif;
     min-width: 360px;
     scroll-behavior: smooth;
   }
   
   #__next {
-    @apply bg-gray-50 text-[#140f0f] dark:bg-gray-900 dark:text-gray-100;
+    @apply bg-gray-50 text-[#140f0f] dark:bg-[#140f0f] dark:text-gray-100;
     display: flex;
     flex-direction: column;
     min-height: 100vh;

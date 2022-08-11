@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import React, { PropsWithChildren } from 'react';
 import Footer from './Footer';
 import Header from './Header';
@@ -14,6 +15,7 @@ type MetaProps = {
 
 const Layout: React.FC<MetaProps> = (props) => {
   const { children, ...customMeta } = props;
+  const router = useRouter();
   const meta = {
     title: 'Marco Kammer - Developer, writer, creator.',
     description: `Frontend developer, tRPC lurker and course creator.`,
@@ -31,8 +33,14 @@ const Layout: React.FC<MetaProps> = (props) => {
         <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
         <meta name='robots' content='follow, index' />
         <meta content={meta.description} name='description' />
-        {/* <meta property="og:url" content={`https://leerob.io${router.asPath}`} />
-        <link rel="canonical" href={`https://leerob.io${router.asPath}`} /> */}
+        <meta
+          property='og:url'
+          content={`https://kammer.vercel.app${router.asPath}`}
+        />
+        <link
+          rel='canonical'
+          href={`https://kammer.vercel.app${router.asPath}`}
+        />
         <meta property='og:type' content={meta.type} />
         <meta property='og:site_name' content='Marco Kammer' />
         <meta name='description' content='Marco Kammer Porfolio' />

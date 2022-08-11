@@ -24,8 +24,6 @@ const NavLink: React.FC<{ href: string; text: string }> = ({ href, text }) => {
 };
 
 export default function Header() {
-  const router = useRouter();
-  const isActive = router.asPath === '/blog';
   const [mounted, setMounted] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
 
