@@ -5,8 +5,13 @@ import Link from 'next/link';
 import Layout from '../components/Layout';
 import BlogPostCard from '../components/BlogPostCard';
 import { Newsletter } from '../components/Newsletter';
+import { trpc } from '../utils/trpc';
 
 const Home: NextPage = () => {
+  const { data: projectData, isLoading } = trpc.proxy.project.all.useQuery();
+
+  if (isLoading) return <div>Loading...</div>;
+
   return (
     <Suspense fallback={null}>
       <Layout>
@@ -81,17 +86,20 @@ const Home: NextPage = () => {
             Featured Projects
           </h3>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-            {/* {projectData.map((project, i) => (
-              <Link key={i} href={project.link}>
-                <Image
-                  className='w-full h-36 lg:h-72 object-cover rounded-xl filter grayscale hover:grayscale-0'
-                  src={project.image}
-                  alt={project.name}
-                  width={1280}
-                  height={720}
-                />
-              </Link>
-            ))} */}
+            {projectData
+              ? projectData.map((project, i) => (
+                  <a key={i} href={project.link}>
+                    <Image
+                      className='w-full h-36 lg:h-72 object-cover rounded-xl filter grayscale hover:grayscale-0'
+                      src={project.image}
+                      alt={project.name}
+                      priority
+                      width={1280}
+                      height={720}
+                    />
+                  </a>
+                ))
+              : 'bruh you ain&#39;t got any data'}
           </div>
           <h3 className='font-bold text-2xl md:text-4xl tracking-tight mb-4 mt-16 text-black dark:text-white'>
             Learn React & Next.js
