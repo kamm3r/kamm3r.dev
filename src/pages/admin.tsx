@@ -7,15 +7,15 @@ export default function Admin() {
   const [isLoadings, setIsLoadings] = React.useState(false);
   const inputFileRef = React.useRef<HTMLInputElement | null>(null);
 
-  if (isLoading) return null;
+  // if (isLoading) return null;
 
-  if (data !== 'ADMIN') {
-    return (
-      <h1>
-        you ain&apos;t getting in bitch...you are a beta pussyhole bitch!!
-      </h1>
-    );
-  }
+  // if (data !== 'ADMIN') {
+  //   return (
+  //     <h1>
+  //       you ain&apos;t getting in bitch...you are a beta pussyhole bitch!!
+  //     </h1>
+  //   );
+  // }
 
   const uploadFile = async (
     e: React.ChangeEvent<HTMLInputElement>
@@ -112,10 +112,10 @@ export default function Admin() {
             className='flex items-center justify-center px-4 py-1 font-medium  bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded w-32'
             type='submit'
             value='Upload'
-            disabled={isLoading}
+            disabled={isLoadings}
             onClick={handleOnClick}
           />
-          {isLoading && ` Wait, please...`}
+          {isLoadings && ` Wait, please...`}
           {/* {errors.files && <div>{errors.files.message}</div>} */}
           {/* )} */}
           {/* {uploadData && ( */}
@@ -145,10 +145,10 @@ export default function Admin() {
             className='flex items-center justify-center px-4 py-1 font-medium  bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded w-32'
             type='submit'
             value='Upload'
-            disabled={isLoading}
+            disabled={isLoadings}
             onChange={uploadFile}
           />
-          {isLoading && ` Wait, please...`}
+          {isLoadings && ` Wait, please...`}
           {/* {errors.files && <div>{errors.files.message}</div>} */}
           {/* )} */}
           {/* {uploadData && ( */}
