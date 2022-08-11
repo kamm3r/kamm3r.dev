@@ -86,20 +86,22 @@ const Home: NextPage = () => {
             Featured Projects
           </h3>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-            {projectData
-              ? projectData.map((project, i) => (
-                  <a key={i} href={project.link}>
-                    <Image
-                      className='w-full h-36 lg:h-72 object-cover rounded-xl filter grayscale hover:grayscale-0'
-                      src={project.image}
-                      alt={project.name}
-                      priority
-                      width={1280}
-                      height={720}
-                    />
-                  </a>
-                ))
-              : 'bruh you ain&#39;t got any data'}
+            {projectData ? (
+              projectData.map((project, i) => (
+                <a key={i} href={project.link}>
+                  <Image
+                    className='w-full h-36 lg:h-72 object-cover rounded-xl filter grayscale hover:grayscale-0'
+                    src={project.image}
+                    alt={project.name}
+                    priority
+                    width={1280}
+                    height={720}
+                  />
+                </a>
+              ))
+            ) : (
+              <p>bruh you ain&#39;t got any data</p>
+            )}
           </div>
           <h3 className='font-bold text-2xl md:text-4xl tracking-tight mb-4 mt-16 text-black dark:text-white'>
             Learn React & Next.js
