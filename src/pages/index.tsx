@@ -26,8 +26,8 @@ const Home: NextPage = () => {
                 <span className='font-semibold'>Athlete</span>
               </h2>
               <p className='text-gray-600 dark:text-gray-400 mb-16'>
-                Helping developers build a faster web. Teaching about web
-                development, serverless, and React / Next.js. fixes this
+                Helping developers build a faster web. Maybe teaching about web
+                development, and React / Next.js. fixes this
               </p>
             </div>
             <div className='w-[80px] sm:w-[176px] relative mb-8 sm:mb-0 '>
@@ -46,6 +46,9 @@ const Home: NextPage = () => {
           <h3 className='font-bold text-2xl md:text-4xl tracking-tight mb-6'>
             Featured Posts
           </h3>
+          <p className='text-base text-gray-600 dark:text-gray-400 md:text-xl tracking-normal mb-6'>
+            There is not yet any real post here
+          </p>
           <div className='flex gap-6 flex-col md:flex-row'>
             <BlogPostCard
               title='Everything I Know About Style Guides, Design Systems, and Component Libraries'
@@ -103,7 +106,7 @@ const Home: NextPage = () => {
               <p>bruh you ain&#39;t got any data</p>
             )}
           </div>
-          <h3 className='font-bold text-2xl md:text-4xl tracking-tight mb-4 mt-16 text-black dark:text-white'>
+          {/* <h3 className='font-bold text-2xl md:text-4xl tracking-tight mb-4 mt-16 text-black dark:text-white'>
             Learn React & Next.js
           </h3>
           <p className='text-gray-600 dark:text-gray-400 mb-4'>
@@ -132,7 +135,7 @@ const Home: NextPage = () => {
                 d='M17.5 12h-15m11.667-4l3.333 4-3.333-4zm3.333 4l-3.333 4 3.333-4z'
               />
             </svg>
-          </a>
+          </a> */}
           <span className='h-16' />
           <Newsletter />
         </div>
