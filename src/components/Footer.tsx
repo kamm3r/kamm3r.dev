@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
       <Image src='/splat.svg' width={18} height={18} alt='logo' />
       <Link href='/terms'>Terms</Link>
       <Link href='/privacy'>Privacy Policy</Link>
-      <Link href='https://github.com/kammers'>
+      <Link href='https://github.com/kamm3r'>
         <a target='_blank' rel='noopener noreferrer'>
           Github
         </a>

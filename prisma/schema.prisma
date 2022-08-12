@@ -36,7 +36,7 @@ model Project {
 
 model views {
     slug  String @id @db.VarChar(128)
-    count BigInt @default(0)
+    count BigInt @default(1)
 }
 
 // Necessary for Next auth
