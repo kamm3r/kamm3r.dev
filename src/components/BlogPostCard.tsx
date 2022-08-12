@@ -1,4 +1,17 @@
 import Link from 'next/link';
+import useSWR from 'swr';
+
+type Views = {
+  total: number;
+};
+
+async function fetcher<JSON = any>(
+  input: RequestInfo,
+  init?: RequestInit
+): Promise<JSON> {
+  const res = await fetch(input, init);
+  return res.json();
+}
 
 export default function BlogPostCard({
   title,
@@ -9,8 +22,8 @@ export default function BlogPostCard({
   slug: string;
   gradient: string;
 }) {
-  //   const { data } = useSWR<Views>(`/api/views/${slug}`, fetcher);
-  //   const views = data?.total;
+  const { data } = useSWR<Views>(`/api/views/${slug}`, fetcher);
+  const views = data?.total;
 
   return (
     <Link href={`/blog/${slug}`}>
@@ -45,8 +58,7 @@ export default function BlogPostCard({
               />
             </svg>
             <span className='ml-2 align-baseline capsize'>
-              120 views
-              {/* {views ? new Number(views).toLocaleString() : '–––'} */}
+              {views ? new Number(views).toLocaleString() : '–––'}
             </span>
           </div>
         </div>

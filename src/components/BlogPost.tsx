@@ -1,16 +1,34 @@
 import Link from 'next/link';
+import useSWR from 'swr';
+
+type Views = {
+  total: number;
+};
+
+async function fetcher<JSON = any>(
+  input: RequestInfo,
+  init?: RequestInit
+): Promise<JSON> {
+  const res = await fetch(input, init);
+  return res.json();
+}
 
 export default function BlogPost({
   slug,
   title,
   excerpt,
-  views,
-}: {
+}: // views,
+{
   slug: string;
   title: string;
   excerpt: string;
-  views: number;
+  // views: number;
 }) {
+  const { data } = useSWR<Views>(`/api/views/${slug}`, fetcher);
+  const views = data?.total;
+
+  // if (isLoading ) return <p>loading...</p>;
+
   return (
     <Link href={`/blog/${slug}`}>
       <a className='w-full'>

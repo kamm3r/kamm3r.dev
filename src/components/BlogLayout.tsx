@@ -1,8 +1,39 @@
 import { Post } from '../utils/parseMdx';
 import Image from 'next/future/image';
-import { PropsWithChildren, Suspense } from 'react';
+import React, { PropsWithChildren, Suspense, useEffect } from 'react';
 import Layout from './Layout';
 import { Newsletter } from './Newsletter';
+import useSWR from 'swr';
+
+type Views = {
+  total: number;
+};
+
+async function fetcher<JSON>(
+  input: RequestInfo,
+  init?: RequestInit
+): Promise<JSON> {
+  const res = await fetch(input, init);
+  return res.json();
+}
+
+function ViewCounter({ slug }: { slug: string }) {
+  const { data } = useSWR<Views>(`/api/views/${slug}`, fetcher);
+
+  // if (isLoading) return <p>loading...</p>;
+  const views = new Number(data?.total);
+
+  useEffect(() => {
+    const registerView = () =>
+      fetch(`/api/views/${slug}`, {
+        method: 'POST',
+      });
+
+    registerView();
+  }, [slug]);
+
+  return <span>{`${views > 0 ? views.toLocaleString() : '–––'} views`}</span>;
+}
 
 const BlogLayout: React.FC<PropsWithChildren<{ post: Post }>> = ({
   children,
@@ -41,8 +72,8 @@ const BlogLayout: React.FC<PropsWithChildren<{ post: Post }>> = ({
           <p className='mt-2 text-sm text-gray-600 dark:text-gray-400 min-w-32 md:mt-0'>
             {post.readingTime}
             {` • `}
-            10 views
-            {/* <ViewCounter slug={post.slug} /> */}
+            {/* 10 views */}
+            <ViewCounter slug={post.slug} />
           </p>
         </div>
         <Suspense fallback={null}>

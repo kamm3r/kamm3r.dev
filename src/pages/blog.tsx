@@ -49,7 +49,7 @@ export default function Blog({
             />
           </svg>
         </div>
-        {!searchValue && (
+        {/* {!searchValue && (
           <>
             <h3 className='mt-8 mb-4 text-2xl font-bold tracking-tight text-black md:text-4xl dark:text-white'>
               Most Popular
@@ -58,22 +58,22 @@ export default function Blog({
               title='Rust Is The Future of JavaScript Infrastructure'
               excerpt='Why is Rust being used to replace parts of the JavaScript web ecosystem like minification (Terser), transpilation (Babel), formatting (Prettier), bundling (webpack), linting (ESLint), and more?'
               slug='rust'
-              views={69000}
+              // views={69000}
             />
             <BlogPost
               title='Everything I Know About Style Guides, Design Systems, and Component Libraries'
               excerpt="A deep-dive on everything I've learned in the past year building style guides, design systems, component libraries, and their best practices."
               slug='style-guides-component-libraries-design-systems'
-              views={420069}
+              // views={420069}
             />
             <BlogPost
               title='Building a Design System Monorepo with Turborepo'
               excerpt='Manage multiple packages with a shared build, test, and release process using Turborepo, Changesets, Storybook, and more.'
               slug='turborepo-design-system-monorepo'
-              views={1234}
+              // views={1234}
             />
           </>
-        )}
+        )} */}
         <Suspense fallback={null}>
           <h3 className='mt-8 mb-4 text-2xl font-bold tracking-tight text-black md:text-4xl dark:text-white'>
             All Posts
@@ -90,7 +90,6 @@ export default function Blog({
                 slug={post.slug}
                 title={post.title}
                 excerpt={post.excerpt}
-                views={120}
               />
             ))}
           </ul>
