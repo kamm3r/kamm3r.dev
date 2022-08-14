@@ -1,4 +1,4 @@
-import { Post } from '../utils/parseMdx';
+import { Post } from '../utils/mdx';
 import Image from 'next/future/image';
 import React, { PropsWithChildren, Suspense, useEffect } from 'react';
 import Layout from './Layout';
@@ -80,11 +80,13 @@ const BlogLayout: React.FC<PropsWithChildren<{ post: Post }>> = ({
           <div className='w-full mt-4 prose dark:prose-dark max-w-none'>
             {children}
           </div>
-          <div className='mt-8'>
-            <Newsletter />
-          </div>
+          <div className='mt-8'>{/* <Newsletter /> */}</div>
           <div className='text-sm text-gray-700 dark:text-gray-300'>
-            <a href='#' target='_blank' rel='noopener noreferrer'>
+            <a
+              href='https://twitter.com/kamm3r_'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
               {'Discuss on Twitter'}
             </a>
             {` • `}

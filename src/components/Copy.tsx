@@ -35,31 +35,19 @@ function useCopyToClipboard(): [CopiedValue, CopyFn] {
 }
 
 export default function Copy() {
-  const text: string = 'marcokammer59@gmail.com';
+  const text = 'marcokammer59@gmail.com';
   const [value, copy] = useCopyToClipboard();
 
   return (
-    <div className='flex flex-col mt-12'>
+    <div className='flex flex-col'>
       <button
         className='flex space-x-2 items-center'
         onClick={() => copy(text)}
         disabled={!text}
       >
-        <p
-          className={
-            !value
-              ? 'text-base text-gray-400 xl:text-xl'
-              : 'text-base text-white xl:text-xl'
-          }
-        >
-          {text}
-        </p>
+        <p className={!value ? ' text-gray-400 ' : ' text-white '}>{text}</p>
         <MdContentCopy
-          className={
-            !value
-              ? 'text-2xl text-gray-400 xl:text-xl'
-              : 'text-2xl text-white xl:text-xl'
-          }
+          className={!value ? ' text-gray-400 ' : ' text-white '}
         />
       </button>
       {value && <p className='font-bold mr-5'>Copied!</p>}

@@ -1,21 +1,22 @@
 import Link from 'next/link';
-import Image from 'next/future/image';
+import Image, { ImageProps } from 'next/future/image';
 
 import { ProsCard, ConsCard } from './Cards';
-// import Unsplash from 'components/metrics/Unsplash';
-// import Analytics from 'components/metrics/Analytics';
-// import YouTube from 'components/metrics/Youtube';
 import Step from './Step';
 import ImageWithTheme from './ImageWithTheme';
+import React from 'react';
 
-const CustomLink = (props: any) => {
-  const href = props.href;
+const CustomLink: React.FC<{ href: string; children: React.ReactNode }> = ({
+  children,
+  href,
+  ...props
+}) => {
   const isInternalLink = href && (href.startsWith('/') || href.startsWith('#'));
 
   if (isInternalLink) {
     return (
-      <Link href={href}>
-        <a {...props}>{props.children}</a>
+      <Link href={href} {...props}>
+        <a>{children}</a>
       </Link>
     );
   }
@@ -23,8 +24,8 @@ const CustomLink = (props: any) => {
   return <a target='_blank' rel='noopener noreferrer' {...props} />;
 };
 
-function RoundedImage(props: any) {
-  return <Image alt={props.alt} className='rounded-lg' {...props} />;
+function RoundedImage({ alt, ...props }: ImageProps) {
+  return <Image alt={alt} className='rounded-lg' {...props} />;
 }
 
 function Callout(props: any) {
@@ -46,7 +47,6 @@ const MDXComponents = {
   ProsCard,
   Step,
   // Unsplash,
-  // YouTube
 };
 
 export default MDXComponents;
