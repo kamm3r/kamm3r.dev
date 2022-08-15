@@ -382,7 +382,7 @@ export const Tweet: React.FC<
                   <source key={i} src={v.url} type={v.content_type} />
                 ))}
                 <p className='text-sm text-gray-600 dark:text-gray-400 '>
-                  Your browser doesn't support HTML video. Here is a{' '}
+                  Your browser doesn&#39;t support HTML video. Here is a{' '}
                   <a className='hover:underline' href={m.variants[0]?.url}>
                     link to the video
                   </a>{' '}
@@ -404,7 +404,7 @@ export const Tweet: React.FC<
                   <source key={i} src={v.url} type={v.content_type} />
                 ))}
                 <p className='text-sm text-gray-600 dark:text-gray-400 '>
-                  Your browser doesn't support HTML video. Here is a{' '}
+                  Your browser doesn&#39;t support HTML video. Here is a{' '}
                   <a className='hover:!underline' href={m.variants[0]?.url}>
                     link to the video
                   </a>{' '}
