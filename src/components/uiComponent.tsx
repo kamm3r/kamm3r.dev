@@ -279,7 +279,7 @@ export const Tweet: React.FC<
   //     referenced_tweets && referenced_tweets.find((t) => t.type === 'quoted');
 
   return (
-    <div className='tweet rounded-lg border border-gray-200 dark:border-gray-800 px-6 py-4 my-4 w-full bg-white dark:bg-gray-900'>
+    <div className='flex flex-col tweet rounded-lg border border-gray-200 dark:border-gray-800 px-6 py-4 my-4 w-full bg-white dark:bg-gray-900'>
       <div className='flex items-center'>
         <a
           className='flex h-12 w-12'
@@ -349,23 +349,74 @@ export const Tweet: React.FC<
           className={
             media.length === 1
               ? 'inline-grid grid-cols-1 gap-x-2 gap-y-2 my-2'
-              : 'inline-grid grid-cols-2 gap-x-2 gap-y-2 my-2'
+              : 'inline-grid grid-cols-2 grid-flow-dense gap-2 my-2'
           }
         >
-          {media.map((m) => (
-            <Image
-              key={m.media_key}
-              alt={text}
-              height={m.height}
-              width={m.width}
-              src={m.url}
-              className='rounded'
-            />
-          ))}
+          {media.map((m) =>
+            m.type == 'photo' ? (
+              <Image
+                key={m.media_key}
+                alt={text}
+                height={m.height}
+                width={m.width}
+                src={m.url}
+                className={
+                  media.length === 1
+                    ? 'rounded w-full h-full max-w-full object-cover'
+                    : 'rounded w-full h-full max-w-full max-h-[140px] object-cover'
+                }
+              />
+            ) : m.type === 'video' ? (
+              <video
+                key={m.media_key}
+                autoPlay
+                muted
+                controls
+                loop
+                poster={m.preview_image_url}
+                height={m.height}
+                width={m.width}
+                className='roundeds'
+              >
+                {m.variants.map((v, i) => (
+                  <source key={i} src={v.url} type={v.content_type} />
+                ))}
+                <p className='text-sm text-gray-600 dark:text-gray-400 '>
+                  Your browser doesn't support HTML video. Here is a{' '}
+                  <a className='hover:underline' href={m.variants[0]?.url}>
+                    link to the video
+                  </a>{' '}
+                  instead.
+                </p>
+              </video>
+            ) : (
+              <video
+                key={m.media_key}
+                autoPlay
+                muted
+                loop
+                poster={m.preview_image_url}
+                height={m.height}
+                width={m.width}
+                className='rounded w-full h-full my-0'
+              >
+                {m.variants.map((v, i) => (
+                  <source key={i} src={v.url} type={v.content_type} />
+                ))}
+                <p className='text-sm text-gray-600 dark:text-gray-400 '>
+                  Your browser doesn't support HTML video. Here is a{' '}
+                  <a className='hover:!underline' href={m.variants[0]?.url}>
+                    link to the video
+                  </a>{' '}
+                  instead.
+                </p>
+              </video>
+            )
+          )}
         </div>
       ) : null}
 
-      {quoteTweet ? <Tweet {...quoteTweet} /> : null}
+      {showAttachments && quoteTweet ? <Tweet {...quoteTweet} /> : null}
       <a
         className='!text-gray-500 text-sm hover:!underline'
         href={tweetUrl}

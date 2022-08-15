@@ -22,9 +22,10 @@ pnpm dev
 - [] Contact Resposiveness n alignment fixes
 - [] responsiveness on all size check up n then fixing if needed
 - [] performance tweaks n minor fixes
-- [] smooth scrolling n Links that scroll to sections
 - [] add screen reader
-- [] fix prod newsletter submitting
+- [x] add video and gif to tweets
+- [] fixes view adding up when reloading page re-entering page to maybe cookie based
+- [x] fix prod newsletter submitting
 
 - [x] figure out, how to get react three element works with scroll not going to do this
 - [x] make 3d object done

@@ -193,7 +193,9 @@ import { encode } from 'qss';
 export const formatShortDate = (date: string) => {
   const _date = new Date(date);
 
-  return isThisYear(_date) ? format(_date, 'MMM d') : format(_date, 'MMM d, y');
+  return isThisYear(_date)
+    ? format(_date, 'h:mm a - MMM d, y')
+    : format(_date, 'h:mm a - MMM d, y');
 };
 
 export type TweetRaw = {
@@ -292,6 +294,13 @@ type Media = {
   preview_image_url: string;
   type: 'animated_gif' | 'photo' | 'video';
   alt_text?: string;
+  variants: Video[];
+};
+
+type Video = {
+  bit_rate: number;
+  content_type: string;
+  url: string;
 };
 
 type Includes = {
@@ -396,16 +405,16 @@ const formatTweet = (
 
   const metricsFormatted = {
     replies: tweet.public_metrics?.reply_count
-      ? tweet.public_metrics.reply_count.toLocaleString()
+      ? tweet.public_metrics.reply_count.toString()
       : '0',
     retweets: tweet.public_metrics?.retweet_count
-      ? tweet.public_metrics.retweet_count.toLocaleString()
+      ? tweet.public_metrics.retweet_count.toString()
       : '0',
     likes: tweet.public_metrics?.like_count
-      ? tweet.public_metrics.like_count.toLocaleString()
+      ? tweet.public_metrics.like_count.toString()
       : '0',
     quotes: tweet.public_metrics?.quote_count
-      ? tweet.public_metrics.quote_count.toLocaleString()
+      ? tweet.public_metrics.quote_count.toString()
       : '0',
   };
 
@@ -470,6 +479,7 @@ export const getTweets = async (ids: string[]) => {
       'url',
       'preview_image_url',
       'alt_text',
+      'variants',
     ].join(','),
   });
 

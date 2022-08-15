@@ -21,7 +21,7 @@ export default function Blog({
           Blog
         </h1>
         <p className='mb-4 text-gray-600 dark:text-gray-400'>
-          {`I'm going to write mostly about tech stuff but here and odd ball might come out.
+          {`I'm going to write mostly about tech and gamedev stuff but here and odd ball might come out.
             In total, I've written ${posts?.length} articles on my blog.
             Use the search below to filter by title.`}
         </p>
