@@ -8,12 +8,26 @@ import { Newsletter } from '../components/Newsletter';
 import { trpc } from '../utils/trpc';
 import { getAllPosts, Post } from '../utils/mdx';
 
+const Placeholder = () => {
+  return Array.from({ length: 6 }, (_, i) => (
+    <div
+      key={i}
+      className='space-y-5 rounded-2xl bg-white/5 p-4 w-full max-w-[1280px] max-h-[720px] flex-[1_1_30%]'
+    >
+      <div className='h-24 rounded-lg bg-rose-100/10'></div>
+      <div className='space-y-3'>
+        <div className='h-3 w-3/5 rounded-lg bg-rose-100/10'></div>
+        <div className='h-3 w-4/5 rounded-lg bg-rose-100/20'></div>
+        <div className='h-3 w-2/5 rounded-lg bg-rose-100/20'></div>
+      </div>
+    </div>
+  ));
+};
+
 export default function Home({
   posts,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { data: projectData, isLoading } = trpc.proxy.project.all.useQuery();
-
-  if (isLoading) return <div>Loading...</div>;
 
   return (
     <Suspense fallback={null}>
@@ -49,23 +63,33 @@ export default function Home({
           <h3 className='font-bold text-2xl md:text-4xl tracking-tight mb-4 '>
             Projects
           </h3>
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-            {!projectData ? (
-              <p>bruh you ain&#39;t got any data</p>
-            ) : (
-              projectData.map((project, i) => (
-                <a key={i} href={project.link}>
-                  <Image
-                    className='w-full h-36 lg:h-60 object-cover rounded-xl filter grayscale hover:grayscale-0'
-                    src={project.image}
-                    alt={project.name}
-                    priority
-                    width={1280}
-                    height={720}
-                  />
-                </a>
-              ))
-            )}
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full'>
+            {!projectData || isLoading
+              ? Array.from({ length: 6 }, (_, i) => (
+                  <div
+                    key={i}
+                    className='space-y-5 rounded-2xl bg-white/5 p-4 w-full max-w-[1280px] max-h-[720px] flex-[1_1_30%]'
+                  >
+                    <div className='h-24 rounded-lg bg-rose-100/10'></div>
+                    <div className='space-y-3'>
+                      <div className='h-3 w-3/5 rounded-lg bg-rose-100/10'></div>
+                      <div className='h-3 w-4/5 rounded-lg bg-rose-100/20'></div>
+                      <div className='h-3 w-2/5 rounded-lg bg-rose-100/20'></div>
+                    </div>
+                  </div>
+                ))
+              : projectData.map((project, i) => (
+                  <a key={i} href={project.link}>
+                    <Image
+                      className='w-full h-36 lg:h-60 object-cover rounded-xl filter grayscale hover:grayscale-0'
+                      src={project.image}
+                      alt={project.name}
+                      priority
+                      width={1280}
+                      height={720}
+                    />
+                  </a>
+                ))}
           </div>
           <h3 className='font-bold text-2xl md:text-4xl tracking-tight mb-6 mt-16'>
             Featured Posts
