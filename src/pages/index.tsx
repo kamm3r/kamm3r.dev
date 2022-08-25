@@ -142,13 +142,6 @@ export default function Home({
 }
 
 export async function getStaticProps() {
-  //   const posts: c = getAllPosts()
-  //     .slice(0, 9)
-  //     .map((post) => post);
-
-  //   return { props: { posts } };
-  // }
-  // export const getStaticProps: GetStaticProps = async ({preview= false}) => {
   const posts: Post[] = getAllPosts()
     .slice(0, 3)
     .map((post) => post)
