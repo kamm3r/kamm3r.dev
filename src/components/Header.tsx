@@ -40,7 +40,7 @@ export const Header: React.FC = () => {
           <MobileMenu />
           <NavLink href='/' text='Home' />
           <NavLink href='/blog' text='Blog' />
-          <NavLink href='/faq' text='FAQ' />
+          {/* <NavLink href='/faq' text='FAQ' /> */}
           <NavLink href='/contact' text='Contact' />
         </div>
         <button

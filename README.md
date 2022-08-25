@@ -31,3 +31,4 @@ pnpm dev
 - [x] make 3d object done
 - [x] contact section finishing done
 - [x] project layout with 2 columns and mappping it or for loop it done
+- [] fix homepage project not loading
