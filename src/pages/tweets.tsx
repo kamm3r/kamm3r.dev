@@ -13,7 +13,7 @@ export default function Tweets({ tweets }: { tweets: any }) {
           Tweets
         </h1>
         <p className='text-gray-600 dark:text-gray-400 mb-4'>
-          This is a collection of tweets I've enjoyed. I use Twitter quite a
+          This is a collection of tweets I&#39;ve enjoyed. I use Twitter quite a
           bit, so I wanted a place to publicly share what inspires me, makes me
           laugh, and makes me think.
         </p>
