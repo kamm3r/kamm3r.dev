@@ -373,14 +373,17 @@ export const Tweet: React.FC<
                 muted
                 controls
                 loop
+                preload='metadata'
                 poster={m.preview_image_url}
+                crossOrigin='anonymous'
                 height={m.height}
                 width={m.width}
                 className='roundeds'
               >
-                {m.variants.map((v, i) => (
-                  <source key={i} src={v.url} type={v.content_type} />
-                ))}
+                {m.variants.map((v, i) => {
+                  const url = v.url;
+                  return <source key={i} src={url} type={v.content_type} />;
+                })}
                 <p className='text-sm text-gray-600 dark:text-gray-400 '>
                   Your browser doesn&#39;t support HTML video. Here is a{' '}
                   <a className='hover:underline' href={m.variants[0]?.url}>
@@ -395,7 +398,9 @@ export const Tweet: React.FC<
                 autoPlay
                 muted
                 loop
+                preload='metadata'
                 poster={m.preview_image_url}
+                crossOrigin='anonymous'
                 height={m.height}
                 width={m.width}
                 className='rounded w-full h-full my-0'
@@ -487,16 +492,57 @@ export const Tweet: React.FC<
   );
 };
 
-export function Frame(props: any) {
+export function Frame({ url }: { url: string }) {
   return (
     <div className='relative overflow-hidden w-full pt-[56.25%]'>
       <iframe
-        src={props.url}
+        src={url}
         title='YouTube video player'
         frameBorder={0}
         loading='lazy'
         className='absolute top-0 left-0 border-0 w-full h-full aspect-video'
       ></iframe>
     </div>
+  );
+}
+
+function Gif(
+  media: string,
+  preview: string,
+  height: number,
+  width: number,
+  variants: [{ url: string; content_type: string }]
+) {
+  // const videoRef = React.useRef<HTMLVideoElement>();
+  // videoRef.current?.controls;
+  // if (videoRef.current?.paused || videoRef.current?.ended) {
+  //   videoRef.current.play();
+  // } else {
+  //   videoRef.current?.pause();
+  // }
+  return (
+    <video
+      key={media}
+      autoPlay
+      muted
+      loop
+      preload='metadata'
+      poster={preview}
+      crossOrigin='anonymous'
+      height={height}
+      width={width}
+      className='rounded w-full h-full my-0'
+    >
+      {variants.map((v, i) => (
+        <source key={i} src={v.url} type={v.content_type} />
+      ))}
+      <p className='text-sm text-gray-600 dark:text-gray-400 '>
+        Your browser doesn&#39;t support HTML video. Here is a{' '}
+        {/* <a className='hover:!underline' href={variants[0]?.url}> */}
+        link to the video
+        {/* </a>{' '} */}
+        instead.
+      </p>
+    </video>
   );
 }

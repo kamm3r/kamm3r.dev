@@ -29,8 +29,8 @@ export default function Home({
                 <span className='font-semibold'>Athlete</span>
               </h2>
               <p className='text-gray-600 dark:text-gray-400 mb-16'>
-                Helping developers build a faster web. Maybe teaching about web
-                development, and React / Next.js. fixes this
+                Maybe helping developers build a faster web? Maybe teaching
+                about web development, and React / Next.js. fixes this
               </p>
             </div>
             <div className='w-[80px] sm:w-[176px] relative mb-8 sm:mb-0 '>

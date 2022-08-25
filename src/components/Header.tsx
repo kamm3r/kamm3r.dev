@@ -23,14 +23,13 @@ const NavLink: React.FC<{ href: string; text: string }> = ({ href, text }) => {
   );
 };
 
-export default function Header() {
+export const Header: React.FC = () => {
   const [mounted, setMounted] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
 
   useEffect(() => setMounted(true), []);
 
   return (
-    // fix navbar alignment...it is fucked like truely it is fucked
     <header className='flex flex-row justify-between items-center max-w-5xl py-6 sm:pb-16 z-10 mx-auto px-8 md:px-0'>
       <nav className='flex items-center justify-between w-full relative max-w-7xl border-gray-200 dark:border-gray-700 mx-auto text-gray-900 bg-gray-50  dark:bg-gray-900 bg-opacity-60 dark:text-gray-100'>
         <figure className='flex justify-center items-center'>
@@ -40,9 +39,8 @@ export default function Header() {
         <div className='ml-auto'>
           <MobileMenu />
           <NavLink href='/' text='Home' />
-          {/* <NavLink href='#about' text='About' />
-        <NavLink href='#work' text='Projects' /> */}
           <NavLink href='/blog' text='Blog' />
+          <NavLink href='/faq' text='FAQ' />
           <NavLink href='/contact' text='Contact' />
         </div>
         <button
@@ -80,4 +78,4 @@ export default function Header() {
       </nav>
     </header>
   );
-}
+};
