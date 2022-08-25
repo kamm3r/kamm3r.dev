@@ -13,7 +13,7 @@ export default function Home({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { data: projectData, isLoading } = trpc.proxy.project.all.useQuery();
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading || !projectData) return <div>Loading...</div>;
 
   return (
     <Suspense fallback={null}>
@@ -52,7 +52,7 @@ export default function Home({
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {
               // projectData ? (
-              projectData?.map((project, i) => (
+              projectData.map((project, i) => (
                 <a key={i} href={project.link}>
                   <Image
                     className='w-full h-36 lg:h-60 object-cover rounded-xl filter grayscale hover:grayscale-0'
