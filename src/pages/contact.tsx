@@ -11,7 +11,7 @@ export default function Contact() {
           Contact Us
         </h1>
         <div className='w-full grid lg:grid-cols-2 gap-8 lg:gap-32 '>
-          <Form />
+          {/* <Form /> */}
           <div className='flex flex-col-reverse justify-between sm:flex-row items-start w-full'>
             <div className='flex flex-col pr-8'>
               <h3 className='font-bold text-2xl md:text-4xl tracking-tight mb-1 text-black dark:text-white'>
