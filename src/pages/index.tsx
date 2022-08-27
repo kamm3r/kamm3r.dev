@@ -94,9 +94,9 @@ export default function Home({
           <h3 className='font-bold text-2xl md:text-4xl tracking-tight mb-6 mt-16'>
             Featured Posts
           </h3>
-          <p className='text-base text-gray-600 dark:text-gray-400 md:text-xl tracking-normal mb-6'>
+          {/* <p className='text-base text-gray-600 dark:text-gray-400 md:text-xl tracking-normal mb-6'>
             There is not yet any real post here
-          </p>
+          </p> */}
           <div className='flex gap-6 flex-col md:flex-row'>
             {posts?.map((post) => (
               <BlogPostCard

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react';
 import Layout from '../components/Layout';
 
@@ -17,29 +18,40 @@ const Faq: React.FC = () => {
               What programming languages do you know?
             </h3>
             <p className='text-sm text-gray-600 dark:text-gray-400 md:text-base tracking-normal mb-6'>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Alias
-              cumque eveniet reprehenderit. Enim architecto at corrupti, saepe
-              ipsa similique? Vero.
+              I&#39;m most comfortable with TypeScript.
             </p>
           </li>
           <li>
             <h3 className='font-bold text-xl md:text-2xl tracking-tight mb-4 '>
-              What programming languages do you know?
+              What is the framework of choice to you?
             </h3>
             <p className='text-sm text-gray-600 dark:text-gray-400 md:text-base tracking-normal mb-6'>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Alias
-              cumque eveniet reprehenderit. Enim architecto at corrupti, saepe
-              ipsa similique? Vero.
+              <Link href='https://nextjs.org/'>
+                <a className='text-blue-400 hover:text-blue-600'>Next.js</a>
+              </Link>{' '}
+              is the current favorite, but also like{' '}
+              <Link href='https://astro.build/'>
+                <a className='text-blue-400 hover:text-blue-600'>Astro</a>
+              </Link>{' '}
+              for the simplicity and performance (The best static site framework
+              in my opinion).
             </p>
           </li>
           <li>
             <h3 className='font-bold text-xl md:text-2xl tracking-tight mb-4 '>
-              What programming languages do you know?
+              What are you working on currently?
             </h3>
             <p className='text-sm text-gray-600 dark:text-gray-400 md:text-base tracking-normal mb-6'>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Alias
-              cumque eveniet reprehenderit. Enim architecto at corrupti, saepe
-              ipsa similique? Vero.
+              I am trying to make physics engine with TypeScript.
+            </p>
+          </li>
+          <li>
+            <h3 className='font-bold text-xl md:text-2xl tracking-tight mb-4 '>
+              What IDE or code editor I use?
+            </h3>
+            <p className='text-sm text-gray-600 dark:text-gray-400 md:text-base tracking-normal mb-6'>
+              I use VSCode and sometimes when I feel extra spicy, I might pull
+              up NeoVim.
             </p>
           </li>
         </ul>

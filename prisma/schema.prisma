@@ -34,6 +34,15 @@ model Project {
     link  String
 }
 
+model Contact {
+    id      String @id @default(cuid())
+    name    String
+    email   String
+    message String
+
+    createdAt DateTime @default(now())
+}
+
 model views {
     slug  String @id @db.VarChar(128)
     count BigInt @default(1)

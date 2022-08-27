@@ -1,4 +1,5 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { trpc } from '../utils/trpc';
 
 type FormData = {
   name: string;
@@ -13,6 +14,9 @@ export default function Form() {
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
+
+  const { mutate, isLoading, error } = trpc.proxy.contact.add.useMutation();
+
   const onSubmit: SubmitHandler<FormData> = (data) => console.log(data);
 
   return (
@@ -23,6 +27,7 @@ export default function Form() {
           <input
             type='text'
             className='w-full border border-gray-600 bg-[#2A2A35] px-2 py-2 text-sm rounded-md'
+            required
             {...register('name')}
             placeholder='Joey Salad'
           />
@@ -33,6 +38,8 @@ export default function Form() {
           <input
             className='w-full border border-gray-600 bg-[#2A2A35] px-2 py-2 text-sm rounded-md'
             type='email'
+            pattern='[A-Za-z0-9._+-]+@[A-Za-z0-9 -]+\.[a-z]{2,}'
+            required
             {...register('email')}
             placeholder='joe@email.com'
           />
@@ -43,6 +50,7 @@ export default function Form() {
           <textarea
             className='w-full border border-gray-600 bg-[#2A2A35] px-2 py-2 text-sm h-36 resize-none rounded-md'
             {...register('message')}
+            required
             placeholder='Message...'
             maxLength={280}
           />

@@ -2,6 +2,7 @@
 import { t } from '../utils';
 
 import { authRouter } from './auth';
+import { contactRouter } from './contactForm';
 import { newsletterRouter } from './newletter';
 import { postRouter } from './post';
 import { projectRouter } from './project';
@@ -9,6 +10,7 @@ import { viewsRouter } from './views';
 
 export const appRouter = t.router({
   post: postRouter,
+  contact: contactRouter,
   project: projectRouter,
   newsletter: newsletterRouter,
   auth: authRouter,
