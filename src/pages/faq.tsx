@@ -15,10 +15,10 @@ const Faq: React.FC = () => {
         <ul>
           <li>
             <h3 className='font-bold text-xl md:text-2xl tracking-tight mb-4 '>
-              What programming languages do you know?
+              What is your preferred programming languages?
             </h3>
             <p className='text-sm text-gray-600 dark:text-gray-400 md:text-base tracking-normal mb-6'>
-              I&#39;m most comfortable with TypeScript.
+              I&#39;m the most comfortable with TypeScript.
             </p>
           </li>
           <li>
