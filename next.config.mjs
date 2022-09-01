@@ -1,5 +1,6 @@
 // @ts-check
 import { env } from './src/env/server.mjs';
+import { withPlausibleProxy } from 'next-plausible';
 
 /**
  * Don't be scared of the generics here.
@@ -13,29 +14,31 @@ function defineNextConfig(config) {
   return config;
 }
 
-export default defineNextConfig({
-  reactStrictMode: true,
-  swcMinify: true,
-  images: {
-    domains: [
-      'i.scdn.co', // Spotify Album Art
-      'pbs.twimg.com', // Twitter Profile Picture
-    ],
-  },
-  experimental: {
-    legacyBrowsers: false,
-    browsersListForSwc: true,
-    images: { allowFutureImage: true },
-  },
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: securityHeaders,
-      },
-    ];
-  },
-});
+export default defineNextConfig(
+  withPlausibleProxy()({
+    reactStrictMode: true,
+    swcMinify: true,
+    images: {
+      domains: [
+        'i.scdn.co', // Spotify Album Art
+        'pbs.twimg.com', // Twitter Profile Picture
+      ],
+    },
+    experimental: {
+      legacyBrowsers: false,
+      browsersListForSwc: true,
+      images: { allowFutureImage: true },
+    },
+    async headers() {
+      return [
+        {
+          source: '/(.*)',
+          headers: securityHeaders,
+        },
+      ];
+    },
+  })
+);
 
 // https://nextjs.org/docs/advanced-features/security-headers
 const ContentSecurityPolicy = `
