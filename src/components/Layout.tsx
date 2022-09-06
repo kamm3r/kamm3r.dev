@@ -35,12 +35,9 @@ const Layout: React.FC<MetaProps> = (props) => {
         <meta content={meta.description} name='description' />
         <meta
           property='og:url'
-          content={`https://kammer.vercel.app${router.asPath}`}
+          content={`https://kamm3r.dev${router.asPath}`}
         />
-        <link
-          rel='canonical'
-          href={`https://kammer.vercel.app${router.asPath}`}
-        />
+        <link rel='canonical' href={`https://kamm3r.dev${router.asPath}`} />
         <meta property='og:type' content={meta.type} />
         <meta property='og:site_name' content='Marco Kammer' />
         <meta name='description' content='Marco Kammer Porfolio' />

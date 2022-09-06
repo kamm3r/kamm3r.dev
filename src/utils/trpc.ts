@@ -5,12 +5,23 @@ import type { AppRouter } from '../server/trpc/router';
 import superjson from 'superjson';
 import { NextPageContext } from 'next';
 
-const getBaseUrl = () => {
-  if (typeof window !== 'undefined') return ''; // browser should use relative url
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`; // SSR should use vercel url
+function getBaseUrl() {
+  if (typeof window !== 'undefined') {
+    return '';
+  }
+  // reference for vercel.com
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
 
-  return `http://localhost:${process.env.PORT ?? 3000}`; // dev SSR should use localhost
-};
+  // // reference for render.com
+  if (process.env.RENDER_INTERNAL_HOSTNAME) {
+    return `http://${process.env.RENDER_INTERNAL_HOSTNAME}:${process.env.PORT}`;
+  }
+
+  // assume localhost
+  return `http://localhost:${process.env.PORT ?? 3000}`;
+}
 
 export interface SSRContext extends NextPageContext {
   /**
@@ -44,29 +55,29 @@ export const trpc = setupTRPC<AppRouter, SSRContext>({
     };
   },
 
-  ssr: false,
-  // responseMeta(opts) {
-  //   const ctx = opts.ctx as SSRContext;
+  ssr: true,
+  responseMeta(opts) {
+    const ctx = opts.ctx as SSRContext;
 
-  //   if (ctx.status) {
-  //     // If HTTP status set, propagate that
-  //     return {
-  //       status: ctx.status,
-  //     };
-  //   }
+    if (ctx.status) {
+      // If HTTP status set, propagate that
+      return {
+        status: ctx.status,
+      };
+    }
 
-  //   const error = opts.clientErrors[0];
-  //   if (error) {
-  //     // Propagate http first error from API calls
-  //     return {
-  //       status: error.data?.httpStatus ?? 500,
-  //     };
-  //   }
+    const error = opts.clientErrors[0];
+    if (error) {
+      // Propagate http first error from API calls
+      return {
+        status: error.data?.httpStatus ?? 500,
+      };
+    }
 
-  //   // for app caching with SSR see https://trpc.io/docs/caching
+    // for app caching with SSR see https://trpc.io/docs/caching
 
-  //   return {};
-  // },
+    return {};
+  },
 });
 
 /**

@@ -1,34 +1,43 @@
 import Link from 'next/link';
-import useSWR from 'swr';
+import { trpc } from '../utils/trpc';
 
-type Views = {
-  total: number;
-};
+function ViewCounter({ slug }: { slug: string }) {
+  const { status, data, error } = trpc.views.getViews.useQuery({ slug });
+  const views = new Number(data);
 
-async function fetcher<JSON = any>(
-  input: RequestInfo,
-  init?: RequestInit
-): Promise<JSON> {
-  const res = await fetch(input, init);
-  return res.json();
+  if (status === 'loading') {
+    return (
+      <p className='w-32 mb-4 text-left text-gray-500 md:text-right md:mb-0'>
+        Loading...
+      </p>
+    );
+  }
+
+  if (status === 'error') {
+    return (
+      <p className='w-32 mb-4 text-left text-gray-500 md:text-right md:mb-0'>
+        Error: {error.message}
+      </p>
+    );
+  }
+
+  return (
+    <p className='w-32 mb-4 text-left text-gray-500 md:text-right md:mb-0'>
+      {' '}
+      {`${views ? views.toLocaleString() : '–––'} views`}
+    </p>
+  );
 }
 
 export default function BlogPost({
   slug,
   title,
   excerpt,
-}: // views,
-{
+}: {
   slug: string;
   title: string;
   excerpt: string;
-  // views: number;
 }) {
-  const { data } = useSWR<Views>(`/api/views/${slug}`, fetcher);
-  const views = data?.total;
-
-  // if (isLoading ) return <p>loading...</p>;
-
   return (
     <Link href={`/blog/${slug}`}>
       <a className='w-full'>
@@ -37,10 +46,7 @@ export default function BlogPost({
             <h4 className='w-full mb-2 text-lg font-medium text-gray-900 md:text-xl dark:text-gray-100'>
               {title}
             </h4>
-            <p className='w-32 mb-4 text-left text-gray-500 md:text-right md:mb-0'>
-              {/* {`${views ? new Number(views).toLocaleString() : '–––'} views`} */}
-              {`${views ? new Number(views).toLocaleString() : '–––'} views`}
-            </p>
+            <ViewCounter slug={slug} />
           </div>
           <p className='text-gray-600 dark:text-gray-400'>{excerpt}</p>
         </div>

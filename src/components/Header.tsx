@@ -41,9 +41,17 @@ export const Header: React.FC = () => {
           <NavLink href='/' text='Home' />
           <NavLink href='/blog' text='Blog' />
           <NavLink href='/faq' text='FAQ' />
-          <NavLink href='/contact' text='Contact' />
+          {/* <NavLink href='/contact' text='Contact' /> */}
+          <Link href='mailto:kamm3r@proton.me'>
+            <a className='ml-2 px-4 py-2 bg-gray-200 rounded-lg dark:bg-gray-600 hover:ring-2 ring-gray-300 transition-all'>
+              Contact
+            </a>
+            {/* <a className='px-4 py-2 rounded text-black bg-white hover:ring-2 ring-gray-300 transition-all'>
+              Contact
+            </a> */}
+          </Link>
         </div>
-        <button
+        {/* <button
           aria-label='Toggle Dark Mode'
           type='button'
           className='ml-2 w-9 h-9 bg-gray-200 rounded-lg dark:bg-gray-600 flex items-center justify-center hover:ring-2 ring-gray-300 transition-all'
@@ -74,7 +82,7 @@ export const Header: React.FC = () => {
               )}
             </svg>
           )}
-        </button>
+        </button> */}
       </nav>
     </header>
   );

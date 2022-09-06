@@ -35,11 +35,12 @@ function useCopyToClipboard(): [CopiedValue, CopyFn] {
 }
 
 export default function Copy() {
-  const text = 'marcokammer59@gmail.com';
+  // const text = 'marcokammer59@gmail.com';
+  const text = 'kamm3r@proton.me';
   const [value, copy] = useCopyToClipboard();
 
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col md:flex-row'>
       <button
         className='flex space-x-2 items-center'
         onClick={() => copy(text)}

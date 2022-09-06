@@ -3,34 +3,33 @@ import Image from 'next/future/image';
 import React, { PropsWithChildren, Suspense, useEffect } from 'react';
 import Layout from './Layout';
 import { Newsletter } from './Newsletter';
-import useSWR from 'swr';
-
-type Views = {
-  total: number;
-};
-
-async function fetcher<JSON>(
-  input: RequestInfo,
-  init?: RequestInit
-): Promise<JSON> {
-  const res = await fetch(input, init);
-  return res.json();
-}
+import { trpc } from '../utils/trpc';
+import { useViewsStore } from '../utils/store';
 
 function ViewCounter({ slug }: { slug: string }) {
-  const { data } = useSWR<Views>(`/api/views/${slug}`, fetcher);
+  const utils = trpc.useContext();
+  const view = useViewsStore();
+  const { status, data, error } = trpc.views.getViews.useQuery({ slug });
+  const { mutate } = trpc.views.addViews.useMutation({
+    async onSuccess() {
+      console.log('success view added');
+      await utils.views.getViews.invalidate();
+    },
+  });
 
-  // if (isLoading) return <p>loading...</p>;
-  const views = new Number(data?.total);
+  const views = new Number(data);
 
   useEffect(() => {
-    const registerView = () =>
-      fetch(`/api/views/${slug}`, {
-        method: 'POST',
-      });
+    mutate({ slug });
+  }, [mutate, slug]);
 
-    registerView();
-  }, [slug]);
+  if (status === 'loading') {
+    return <span>Loading...</span>;
+  }
+
+  if (status === 'error') {
+    return <span>Error: {error.message}</span>;
+  }
 
   return <span>{`${views > 0 ? views.toLocaleString() : '–––'} views`}</span>;
 }
@@ -72,7 +71,6 @@ const BlogLayout: React.FC<PropsWithChildren<{ post: Post }>> = ({
           <p className='mt-2 text-sm text-gray-600 dark:text-gray-400 min-w-32 md:mt-0'>
             {post.readingTime}
             {` • `}
-            {/* 10 views */}
             <ViewCounter slug={post.slug} />
           </p>
         </div>

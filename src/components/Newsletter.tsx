@@ -9,18 +9,19 @@ export const Newsletter = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<AddNewletterType>();
   const [isDisabled] = useState(false);
-  const { data } = trpc.proxy.newsletter.allSubscriptions.useQuery();
+  const { data } = trpc.newsletter.allSubscriptions.useQuery();
   const { mutate, error, isSuccess, isLoading } =
-    trpc.proxy.newsletter.subscribe.useMutation({
+    trpc.newsletter.subscribe.useMutation({
       onSuccess: (data) => {
         console.log('subscribed to newsletter', data);
+        reset();
       },
     });
 
   const subCount = new Number(data?.length);
-  if (isLoading) return null;
 
   return (
     <div className='border border-blue-200 rounded p-6 my-4 w-full dark:border-gray-800 bg-blue-50 dark:bg-blue-opaque'>
@@ -36,20 +37,23 @@ export const Newsletter = () => {
         onSubmit={handleSubmit((data) => mutate(data))}
       >
         <input
-          {...register('email')}
+          {...register('email', {
+            required: true,
+            pattern:
+              /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+          })}
           aria-label='Email for newsletter'
           type='email'
           placeholder='joe@mama.com'
           autoComplete='email'
-          required
           className='px-4 py-2 mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full border-gray-300 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 pr-32'
         />
         <button
-          disabled={!isDisabled}
+          // disabled={!isDisabled}
           className={
-            isDisabled === false
-              ? 'flex items-center justify-center absolute right-1 top-1 px-4 py-1 font-medium h-8 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded w-28 opacity-50'
-              : 'flex items-center justify-center absolute right-1 top-1 px-4 py-1 font-medium h-8 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded w-28'
+            // isDisabled === false
+            //   ? 'flex items-center justify-center absolute right-1 top-1 px-4 py-1 font-medium h-8 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded w-28 opacity-50':
+            'flex items-center justify-center absolute right-1 top-1 px-4 py-1 font-medium h-8 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded w-28'
           }
           type='submit'
         >

@@ -6,7 +6,7 @@ import { createContext } from '../../../server/trpc/context';
 // export API handler
 export default createNextApiHandler({
   router: appRouter,
-  createContext: createContext,
+  createContext,
   onError({ error }) {
     if (error.code === 'INTERNAL_SERVER_ERROR') {
       // send to bug reporting

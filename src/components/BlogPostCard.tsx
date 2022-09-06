@@ -1,16 +1,27 @@
 import Link from 'next/link';
-import useSWR from 'swr';
+import { trpc } from '../utils/trpc';
 
-type Views = {
-  total: number;
-};
+function ViewCounter({ slug }: { slug: string }) {
+  const { status, data, error } = trpc.views.getViews.useQuery({ slug });
+  const views = new Number(data);
 
-async function fetcher<JSON = any>(
-  input: RequestInfo,
-  init?: RequestInit
-): Promise<JSON> {
-  const res = await fetch(input, init);
-  return res.json();
+  if (status === 'loading') {
+    return <span className='ml-2 align-baseline capsize'>Loading...</span>;
+  }
+
+  if (status === 'error') {
+    return (
+      <span className='ml-2 align-baseline capsize'>
+        Error: {error.message}
+      </span>
+    );
+  }
+
+  return (
+    <span className='ml-2 align-baseline capsize'>
+      {`${views ? views.toLocaleString() : '–––'} views`}
+    </span>
+  );
 }
 
 export default function BlogPostCard({
@@ -22,9 +33,6 @@ export default function BlogPostCard({
   slug: string;
   gradient: string;
 }) {
-  const { data } = useSWR<Views>(`/api/views/${slug}`, fetcher);
-  const views = data?.total;
-
   return (
     <Link href={`/blog/${slug}`}>
       <a
@@ -57,9 +65,7 @@ export default function BlogPostCard({
                 d='M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z'
               />
             </svg>
-            <span className='ml-2 align-baseline capsize'>
-              {views ? new Number(views).toLocaleString() : '–––'}
-            </span>
+            <ViewCounter slug={slug} />
           </div>
         </div>
       </a>
