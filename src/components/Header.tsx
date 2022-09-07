@@ -1,8 +1,6 @@
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
-import { CgMenuRight } from 'react-icons/cg';
-import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
 import MobileMenu from './MobileMenu';
 
@@ -23,15 +21,10 @@ const NavLink: React.FC<{ href: string; text: string }> = ({ href, text }) => {
   );
 };
 
-export const Header: React.FC = () => {
-  const [mounted, setMounted] = useState(false);
-  const { resolvedTheme, setTheme } = useTheme();
-
-  useEffect(() => setMounted(true), []);
-
+export const Header = () => {
   return (
-    <header className='flex flex-row justify-between items-center max-w-5xl py-6 sm:pb-16 z-10 mx-auto px-8 md:px-0'>
-      <nav className='flex items-center justify-between w-full relative max-w-7xl border-gray-200 dark:border-gray-700 mx-auto text-gray-900 bg-gray-50  dark:bg-gray-900 bg-opacity-60 dark:text-gray-100'>
+    <header className='flex flex-row justify-between items-center py-6 sm:pb-16 z-10 mx-auto px-8 md:px-0 w-full'>
+      <nav className='flex items-center justify-between w-full relative max-w-7xl  dark:border-gray-700 mx-auto text-gray-900 dark:bg-gray-900 bg-opacity-60 dark:text-gray-100'>
         <figure className='flex justify-center items-center'>
           <Image src='/splat.svg' width={24} height={24} alt='logo' />
           <h1 className='pl-2 text-xl font-bold'>Marco Kammer</h1>
@@ -43,7 +36,7 @@ export const Header: React.FC = () => {
           <NavLink href='/faq' text='FAQ' />
           {/* <NavLink href='/contact' text='Contact' /> */}
           <Link href='mailto:kamm3r@proton.me'>
-            <a className='ml-2 px-4 py-2 bg-gray-200 rounded-lg dark:bg-gray-600 hover:ring-2 ring-gray-300 transition-all'>
+            <a className='hidden md:inline-block ml-2 px-4 py-2 bg-gray-200 rounded-lg dark:bg-gray-600 hover:ring-2 ring-gray-300 transition-all'>
               Contact
             </a>
             {/* <a className='px-4 py-2 rounded text-black bg-white hover:ring-2 ring-gray-300 transition-all'>

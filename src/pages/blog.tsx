@@ -16,7 +16,7 @@ export default function Blog({
       title='Blog - Marco Kammer'
       description='Thoughts on the software industry, programming, tech, videography, music, and my personal life.'
     >
-      <div className='flex flex-col items-start justify-center max-w-2xl mx-auto mb-16'>
+      <div className='flex flex-col items-start justify-center max-w-3xl mx-auto mb-16'>
         <h1 className='mb-4 text-3xl font-bold tracking-tight text-black md:text-5xl dark:text-white'>
           Blog
         </h1>

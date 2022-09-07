@@ -25,7 +25,7 @@ const Layout: React.FC<MetaProps> = (props) => {
   };
 
   return (
-    <div className='bg-slate-100 text-[#140f0f] dark:bg-[#140f0f] dark:text-white'>
+    <div className='bg-slate-100 text-[#140f0f] dark:bg-[#140f0f] dark:text-white flex flex-col h-screen max-w-5xl mx-auto'>
       <Head>
         <title>{meta.title}</title>
         <meta httpEquiv='Content-Type' content='text/html;charset=UTF-8' />
@@ -55,9 +55,7 @@ const Layout: React.FC<MetaProps> = (props) => {
         )}
       </Head>
       <Header />
-      <main className='flex flex-col justify-center px-8 bg-slate-100 dark:bg-[#140f0f]'>
-        {children}
-      </main>
+      <main className='flex flex-col flex-grow px-8 md:px-0'>{children}</main>
       <Footer />
     </div>
   );

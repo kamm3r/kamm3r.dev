@@ -80,11 +80,13 @@ export default function MobileMenu() {
             </Link>
           </li>
           <li
-            className='border-b border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 text-sm font-semibold'
+            className='text-gray-900 dark:text-gray-100 text-sm font-semibold'
             style={{ transitionDelay: '200ms' }}
           >
-            <Link href='/contact'>
-              <a className='flex w-auto pb-4'>Contact</a>
+            <Link href='mailto:kamm3r@proton.me'>
+              <a className='flex justify-center items-center mb-4 px-4 py-2 bg-gray-200 rounded-lg dark:bg-gray-600 hover:ring-2 ring-gray-300 transition-all'>
+                Contact
+              </a>
             </Link>
           </li>
         </ul>
