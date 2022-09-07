@@ -107,7 +107,7 @@ export default function Home({
             </svg>
           </a>
         </Link>
-        <h3 className='font-bold text-2xl md:text-4xl tracking-tight mb-4 mt-16 text-black dark:text-white'>
+        {/* <h3 className='font-bold text-2xl md:text-4xl tracking-tight mb-4 mt-16 text-black dark:text-white'>
           Learn React & Next.js
         </h3>
         <p className='text-gray-600 dark:text-gray-400 mb-4'>
@@ -136,7 +136,7 @@ export default function Home({
               d='M17.5 12h-15m11.667-4l3.333 4-3.333-4zm3.333 4l-3.333 4 3.333-4z'
             />
           </svg>
-        </a>
+        </a> */}
         {/* <span className='h-16' /> */}
         {/* <Newsletter /> */}
       </div>
