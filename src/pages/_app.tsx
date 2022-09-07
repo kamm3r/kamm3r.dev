@@ -6,7 +6,7 @@ import PlausibleProvider from 'next-plausible';
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
-    <PlausibleProvider domain='kammer.vercel.app'>
+    <PlausibleProvider domain='kamm3r.dev'>
       <Component {...pageProps} />
     </PlausibleProvider>
   );
