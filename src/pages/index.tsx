@@ -26,8 +26,8 @@ export default function Home({
               <span className='font-semibold'>Athlete</span>
             </h2>
             <p className='text-gray-600 dark:text-gray-400 mb-16'>
-              Making developer concepts simpler to digest. Spreading the T3
-              stack gospel aka OP stack
+              Making developer concepts simpler and easier to digest. Spreading
+              the T3 stack gospel aka OP stack
             </p>
           </div>
           <div className='w-[80px] sm:w-[176px] relative mb-8 sm:mb-0 '>
