@@ -25,7 +25,6 @@ export default defineNextConfig(
       ],
     },
     experimental: {
-      legacyBrowsers: false,
       browsersListForSwc: true,
       images: { allowFutureImage: true },
     },

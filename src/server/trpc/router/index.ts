@@ -10,5 +10,4 @@ export const appRouter = t.router({
   views: viewsRouter,
 });
 
-// export type definition of API
 export type AppRouter = typeof appRouter;
