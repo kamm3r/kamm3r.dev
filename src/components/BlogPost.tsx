@@ -16,7 +16,7 @@ function ViewCounter({ slug }: { slug: string }) {
   if (status === 'error') {
     return (
       <p className='w-32 mb-4 text-left text-gray-500 md:text-right md:mb-0'>
-        Error: {error.message}
+        Error: {error?.message}
       </p>
     );
   }

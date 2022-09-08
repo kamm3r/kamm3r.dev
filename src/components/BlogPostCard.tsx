@@ -12,7 +12,7 @@ function ViewCounter({ slug }: { slug: string }) {
   if (status === 'error') {
     return (
       <span className='ml-2 align-baseline capsize'>
-        Error: {error.message}
+        Error: {error?.message}
       </span>
     );
   }

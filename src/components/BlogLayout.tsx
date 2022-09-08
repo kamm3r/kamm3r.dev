@@ -8,7 +8,6 @@ import { useViewsStore } from '../utils/store';
 
 function ViewCounter({ slug }: { slug: string }) {
   const utils = trpc.useContext();
-  const view = useViewsStore();
   const { status, data, error } = trpc.views.getViews.useQuery({ slug });
   const { mutate } = trpc.views.addViews.useMutation({
     async onSuccess() {
