@@ -28,7 +28,7 @@ function ViewCounter({ slug }: { slug: string }) {
   }
 
   if (status === 'error') {
-    return <span>Error: {error.message}</span>;
+    return <span>Error: {error?.message}</span>;
   }
 
   return <span>{`${views > 0 ? views.toLocaleString() : '–––'} views`}</span>;
