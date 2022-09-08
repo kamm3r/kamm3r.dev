@@ -81,7 +81,7 @@ export default function MobileMenu() {
           </li>
           <li
             className='text-gray-900 dark:text-gray-100 text-sm font-semibold'
-            style={{ transitionDelay: '200ms' }}
+            style={{ transitionDelay: '225ms' }}
           >
             <Link href='mailto:kamm3r@proton.me'>
               <a className='flex justify-center items-center mb-4 px-4 py-2 bg-gray-200 rounded-lg dark:bg-gray-600 hover:ring-2 ring-gray-300 transition-all'>
