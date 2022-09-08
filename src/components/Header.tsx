@@ -29,7 +29,7 @@ export const Header = () => {
           <Image src='/splat.svg' width={24} height={24} alt='logo' />
           {/* <h1 className='pl-2 text-xl font-bold'>Marco Kammer</h1> */}
         </figure>
-        <div className='ml-auto'>
+        <div className='-ml-[0.6rem]'>
           <MobileMenu />
           <NavLink href='/' text='Home' />
           <NavLink href='/blog' text='Blog' />

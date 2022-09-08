@@ -49,7 +49,7 @@ const FooterItem = ({
   );
 };
 
-const Faq: React.FC = () => {
+export default function Faq() {
   return (
     <Layout title='FAQ'>
       <div className='flex flex-col justify-center items-start max-w-3xl border-gray-200 dark:border-gray-700 mx-auto pb-16 w-full'>
@@ -93,16 +93,10 @@ const Faq: React.FC = () => {
             </p>
           </li>
           <FooterLink
-            heading='What is the framework of choice to you?'
-            linkHref='https://astro.build/'
-            link='Astro'
-          />
-          <FooterLink
             heading='What stack do I use?'
             linkHref='https://github.com/t3-oss/create-t3-app'
             link='T3 Stack'
           />
-
           <FooterItem
             heading='What are you working on currently?'
             paragraph='I am trying to make physics engine with TypeScript.'
@@ -115,6 +109,4 @@ const Faq: React.FC = () => {
       </div>
     </Layout>
   );
-};
-
-export default Faq;
+}
