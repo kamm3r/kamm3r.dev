@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'next/image';
+import Image from 'next/future/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import MobileMenu from './MobileMenu';

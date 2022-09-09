@@ -57,7 +57,7 @@ export default function Faq() {
           FAQ
         </h1>
         <p className='text-gray-600 dark:text-gray-400 mb-16'>
-          Some insightful question that you might want to know, or NOT!
+          Some insightful question that you might want to know.
         </p>
         <ul>
           <FooterItem

@@ -64,7 +64,11 @@ export default function Home({
               : projectData.map((project, i) => (
                   <a key={i} href={project.link}>
                     <Image
-                      className='w-full h-36 lg:h-60 object-cover rounded-xl filter grayscale hover:grayscale-0'
+                      className={
+                        project.link.length == 0
+                          ? 'w-full h-36 lg:h-60 object-cover rounded-xl filter grayscale cursor-default'
+                          : 'w-full h-36 lg:h-60 object-cover rounded-xl filter grayscale hover:grayscale-0'
+                      }
                       src={project.image}
                       alt={project.name}
                       priority
@@ -78,9 +82,9 @@ export default function Home({
             Featured Posts
           </h3>
           <div className='flex gap-6 flex-col md:flex-row'>
-            {posts?.map((post) => (
+            {posts?.map((post, i) => (
               <BlogPostCard
-                key={post._id}
+                key={i}
                 title={post.title}
                 slug={post.slug}
                 // gradient='from-[#FDE68A] via-[#FCA5A5] to-[#FECACA]'

@@ -22,6 +22,7 @@ pnpm dev
 - [] fix video and gif to tweets in mobile and so that it works on firefox
 - [] make light/dark mode favicon and logo
 - [] add ui element states
+- ui fixes??
 
 ## look into
 

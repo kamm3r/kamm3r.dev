@@ -24,14 +24,10 @@ export default defineNextConfig(
         'pbs.twimg.com', // Twitter Profile Picture
       ],
     },
-    experimental: {
-      browsersListForSwc: true,
-      images: { allowFutureImage: true },
-    },
     async headers() {
       return [
         {
-          source: '/(.*)',
+          source: '/:path',
           headers: securityHeaders,
         },
       ];
