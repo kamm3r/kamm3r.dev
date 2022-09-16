@@ -28,9 +28,6 @@ const Layout: React.FC<MetaProps> = (props) => {
     <div className='bg-slate-100 text-[#140f0f] dark:bg-[#140f0f] dark:text-white flex flex-col h-screen max-w-5xl mx-auto'>
       <Head>
         <title>{meta.title}</title>
-        <meta httpEquiv='Content-Type' content='text/html;charset=UTF-8' />
-        <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-        <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
         <meta name='robots' content='follow, index' />
         <meta content={meta.description} name='description' />
         <meta

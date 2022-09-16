@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: https://kamm3r.dev/sitemap.xml
