@@ -24,7 +24,7 @@ const NavLink: React.FC<{ href: string; text: string }> = ({ href, text }) => {
 export const Header = () => {
   return (
     <header className='flex flex-row justify-between items-center py-6 sm:pb-16 z-10 mx-auto px-8 md:px-0 w-full'>
-      <nav className='flex items-center justify-between w-full relative max-w-7xl  dark:border-gray-700 mx-auto text-gray-900 dark:bg-gray-900 bg-opacity-60 dark:text-gray-100'>
+      <nav className='flex items-center justify-between w-full relative max-w-7xl dark:border-gray-700 mx-auto text-gray-900 bg-opacity-60 dark:text-gray-100'>
         <figure className='flex justify-center items-center'>
           <Image src='/splat.svg' width={24} height={24} alt='logo' />
           {/* <h1 className='pl-2 text-xl font-bold'>Marco Kammer</h1> */}
