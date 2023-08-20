@@ -1,19 +1,20 @@
 ---
-import HeaderLink from './HeaderLink.astro';
+import HeaderLink from "./HeaderLink.astro";
 ---
 
-<header class='flex flex-row justify-between items-center py-6 sm:pb-16 z-10 mx-auto px-8 md:px-0 w-full'
-	<nav class='flex items-center justify-between w-full relative max-w-7xl dark:border-gray-700 mx-auto text-gray-90 bg-opacity-60 dark:text-gray-100'>
-		<figure class='flex justify-center items-center'>
-          <img src='/splat.svg' class='w-6 h-6' alt='logo' />
-          {/* <h1 className='pl-2 text-xl font-bold'>Marco Kammer</h1> */}
-        </figure>
-        <div class='-ml-[0.6rem]'>
-          <HeaderLink href='/'>Home</HeaderLink>
-          <HeaderLink href='/blog'>Blog</HeaderLink>
-          <HeaderLink href='/faq'>FAQ</HeaderLink>
-          <HeaderLink href='mailto:kamm3r@proton.me'>Contact</HeaderLink>
-        </div>
-      </nav>
+<header
+  class="flex flex-row justify-between items-center py-6 sm:pb-16 z-10 mx-auto px-8 md:px-0 w-full"
+  <nav
+  class="flex items-center justify-between w-full relative max-w-7xl dark:border-gray-700 mx-auto text-gray-90 bg-opacity-60 dark:text-gray-100"
+>
+  <figure class="flex justify-center items-center">
+    <img src="/splat.svg" class="w-6 h-6" alt="logo" />
+    {/* <h1 className='pl-2 text-xl font-bold'>Marco Kammer</h1> */}
+  </figure>
+  <div class="-ml-[0.6rem]">
+    <HeaderLink href="/">Home</HeaderLink>
+    <HeaderLink href="/blog">Blog</HeaderLink>
+    <HeaderLink href="/faq">FAQ</HeaderLink>
+    <HeaderLink href="mailto:kamm3r@proton.me">Contact</HeaderLink>
+  </div>
 </header>
-
