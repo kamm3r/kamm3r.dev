@@ -16,10 +16,10 @@ const {
 
 <a
   href={`/blog/${slug}`}
-  class="border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 rounded flex items-center justify-between px-3 py-4 w-full"
+  class="border border-neutral-700 bg-neutral-800 rounded flex items-center justify-between px-3 py-4 w-full"
 >
   <div class="flex flex-col">
-    <p class="font-bold text-neutral-900 dark:text-neutral-100">{title}</p>
+    <p class="font-bold text-neutral-100">{title}</p>
     <span class="opacity-60">{formatDate(date)}</span>
   </div>
   <svg
@@ -32,7 +32,7 @@ const {
     stroke-width="2"
     stroke-linecap="round"
     stroke-linejoin="round"
-    class="lucide lucide-arrow-up-right text-neutral-700 dark:text-neutral-300"
+    class="lucide lucide-arrow-up-right text-neutral-300"
     ><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path>
   </svg>
 </a>

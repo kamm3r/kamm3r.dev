@@ -1,21 +1,21 @@
 import { z } from "zod";
 
-const projectSchema = z.object({
+const repoSchema = z.object({
   name: z.string(),
   link: z.string(),
   description: z.string(),
 });
 
-export type Project = z.infer<typeof projectSchema>;
+export type Repo = z.infer<typeof repoSchema>;
 
 export async function getPinnedRepos(
   number: 1 | 2 | 3 | 4 | 5 | 6
-): Promise<Project[]> {
+): Promise<Repo[]> {
   const res = await fetch("https://pinned.thrzl.xyz/kamm3r").then(
     (res) => res.json()
   );
 
-  const projects = projectSchema.array().parse(res);
+  const repos = repoSchema.array().parse(res);
 
-  return projects.slice(0, number);
+  return repos.slice(0, number);
 }

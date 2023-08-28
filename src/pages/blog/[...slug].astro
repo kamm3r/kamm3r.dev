@@ -16,5 +16,50 @@ const { Content } = await post.render();
 ---
 
 <Base {...post.data}>
+      <article class='flex flex-col items-start justify-center pb-16'>
+        <h1 class='mb-4 text-3xl font-bold tracking-tight md:text-5xl text-neutral-50'>
+          {post.data.title}
+        </h1>
+        <div class='flex flex-col items-start justify-between w-full mt-2 md:flex-row md:items-center'>
+          <div class='flex items-center'>
+            <img
+              alt='Marco Kammer'
+              src='/profile.jpg'
+              class='w-6 h-6 rounded-full'
+            />
+            <p class='ml-2 text-sm text-neutral-300'>
+              {'Marco Kammer / '}
+              {/* {format(parse(post.date), 'MMMM dd, yyyy')} */}
+
+              {new Date(post.data.date).toLocaleDateString('en-us', {
+                dateStyle: 'long',
+              })}
+            </p>
+          </div>
+        <p class='mt-2 text-sm text-neutral-400 min-w-32 md:mt-0'>
+            {post.readingTime}
+          </p>
+        </div>
+    <div class='pt-4 pb-8 prose-dark'>
   <Content />
+  </div>
+           <div class='text-sm text-neutral-300'>
+            <a
+              href='https://twitter.com/kamm3r_'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              {'Discuss on Twitter'}
+            </a>
+            {` • `}
+            <a
+
+              href='https://github.com/kamm3r/'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              {'Suggest Change'}
+            </a>
+          </div>
+  </article>
 </Base>
