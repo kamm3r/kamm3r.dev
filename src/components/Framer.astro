@@ -1,0 +1,17 @@
+---
+type Props = {
+    url: string
+}
+
+const { url } = Astro.props
+---
+    <div class='relative overflow-hidden w-full pt-[56.25%]'>
+      <iframe
+        src={url}
+        title='YouTube video player'
+        frame-border='0'
+        loading='lazy'
+        class='absolute top-0 left-0 border-0 w-full h-full aspect-video'
+      ></iframe>
+    </div>
+
