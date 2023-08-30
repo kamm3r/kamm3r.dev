@@ -10,11 +10,11 @@ const isActive = href === pathname || href === pathname.replace(/\/$/, "");
 ---
 
 <a
-  href={href}
-  class={`${
-    isActive ? "font-bold text-lg" : "text-lg"
-  } hidden md:inline-block p-1 sm:px-3 sm:py-2 rounded-lg hover:bg-neutral-800 transition-all`}
-  {...props}
+    href={href}
+    class={`${
+        isActive ? "font-bold text-lg" : "text-lg opacity-80"
+    } hidden md:inline-block rounded-lg hover:opacity-100 transition-all`}
+    {...props}
 >
-  <slot />
+    <slot />
 </a>
