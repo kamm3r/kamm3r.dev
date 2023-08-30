@@ -16,6 +16,11 @@ const { Content } = await post.render();
 ---
 
 <Base {...post.data}>
+ {post.data.isDraft ? (
+ <blockquote class="my-8 py-4 pl-4 bg-neutral-800" role="alert">
+        This post is a <strong>draft</strong>. If you're reading this, you're probably a cool and trusted person. Please <strong>don't share</strong> it thank you.
+      </blockquote>
+ ):(
   <article class="flex flex-col items-start justify-center pb-16 w-full">
     <h1
       class="mb-4 text-3xl font-bold tracking-tight md:text-5xl text-neutral-50"
@@ -61,5 +66,5 @@ const { Content } = await post.render();
         {"Suggest Change"}
       </a>
     </div>
-  </article>
+  </article>)}
 </Base>

@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import Base from "../../layouts/Base.astro";
 import { sortPostByDate } from "../../utils/date";
-const posts = sortPostByDate(await getCollection("blog"));
+const posts = sortPostByDate(await getCollection("blog",({ data }) => data.isDraft !== true));
 ---
 
 <Base

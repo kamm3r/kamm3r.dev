@@ -1,0 +1,44 @@
+---
+title: Butsuri Physics Engine TS
+description: Butsuri is 2D and 3D physics engine made in purely typescript
+date: 2023-8-30
+isDraft: true
+---
+Butsuri is going to be pretty simple physics engine for now. Main use case for it is going to be games and the supporting package is three.js.
+
+## Collision
+
+
+## Dynamics
+
+Butsuri has rigidbodies and softbodies dynamics.
+Is solid body that doesn't deform or might slightly but it is barely noticeable.
+Usually used in character controllers
+
+```ts
+import { Rigidbody2D } from 'butsuri/2d'
+import { Softbody } from 'butsuri/3d'
+
+// rigidbody 2d setup
+const rigidbody = new Rigidbody2D('circle', [1, 1])
+
+// sofbody setup
+const softbody = new Softbody('box', [1, 1, 1])
+
+```
+## Geometry
+
+- Box
+- Capsule
+- Plane
+- ConvexMesh
+- TriangleMesh
+- HeightField
+
+## Math
+
+[Senkei](https://github.com/kamm3r/senkei) is going to be the math library that I'm going to use.
+
+## Conclusion
+
+Current plan is going to look something like this.
