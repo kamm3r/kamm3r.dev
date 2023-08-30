@@ -3,11 +3,11 @@ import { CollectionEntry, getCollection } from "astro:content";
 import Base from "../../layouts/Base.astro";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog");
-  return posts.map((post) => ({
-    params: { slug: post.slug },
-    props: post,
-  }));
+    const posts = await getCollection("blog");
+    return posts.map((post) => ({
+        params: { slug: post.slug },
+        props: post,
+    }));
 }
 type Props = CollectionEntry<"blog">;
 
@@ -16,55 +16,57 @@ const { Content } = await post.render();
 ---
 
 <Base {...post.data}>
- {post.data.isDraft ? (
- <blockquote class="my-8 py-4 pl-4 bg-neutral-800" role="alert">
-        This post is a <strong>draft</strong>. If you're reading this, you're probably a cool and trusted person. Please <strong>don't share</strong> it thank you.
-      </blockquote>
- ):(
-  <article class="flex flex-col items-start justify-center pb-16 w-full">
-    <h1
-      class="mb-4 text-3xl font-bold tracking-tight md:text-5xl text-neutral-50"
-    >
-      {post.data.title}
-    </h1>
-    <div
-      class="flex flex-col items-start justify-between w-full mt-2 md:flex-row md:items-center"
-    >
-      <div class="flex items-center">
-        <img
-          alt="Marco Kammer"
-          src="/profile.jpg"
-          class="w-6 h-6 rounded-full"
-        />
-        <p class="ml-2 text-sm text-neutral-300">
-          {"Marco Kammer / "}
-          {
-            new Date(post.data.date).toLocaleDateString("en-us", {
-              dateStyle: "long",
-            })
-          }
-        </p>
-      </div>
-    </div>
-    <div class="pt-4 pb-8 prose-neutral dark:prose-invert prose md:prose-lg">
-      <Content />
-    </div>
-    <div class="text-sm text-neutral-300">
-      <a
-        href="https://twitter.com/kamm3r_"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {"Discuss on Twitter"}
-      </a>
-      {` • `}
-      <a
-        href="https://github.com/kamm3r/"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {"Suggest Change"}
-      </a>
-    </div>
-  </article>)}
+    {
+        post.data.isDraft ? (
+            <blockquote class="my-8 py-4 pl-4 bg-neutral-800 text-lg" role="alert">
+                This post is a <em class="underline">draft</em>. If you're reading this,
+                you're probably a cool and trusted person. Please{" "}
+                <em class="underline">don't share</em> it thank you.
+            </blockquote>
+        ) : (
+            <article class="flex flex-col items-start justify-center pb-16 w-full">
+                <h1 class="mb-4 text-3xl font-bold tracking-tight md:text-5xl text-neutral-50">
+                    {post.data.title}
+                </h1>
+                <div class="flex flex-col items-start justify-between w-full mt-2 md:flex-row md:items-center">
+                    <div class="flex items-center">
+                        <img
+                            alt="Marco Kammer"
+                            src="/profile.jpg"
+                            class="w-6 h-6 rounded-full"
+                        />
+                        <p class="ml-2 text-sm text-neutral-300">
+                            {"Marco Kammer / "}
+                            {new Date(post.data.date).toLocaleDateString(
+                                "en-us",
+                                {
+                                    dateStyle: "long",
+                                }
+                            )}
+                        </p>
+                    </div>
+                </div>
+                <div class="pt-4 pb-8 prose-neutral dark:prose-invert prose md:prose-lg">
+                    <Content />
+                </div>
+                <div class="text-sm text-neutral-300">
+                    <a
+                        href="https://twitter.com/kamm3r_"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        {"Discuss on Twitter"}
+                    </a>
+                    {` • `}
+                    <a
+                        href="https://github.com/kamm3r/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        {"Suggest Change"}
+                    </a>
+                </div>
+            </article>
+        )
+    }
 </Base>
