@@ -50,7 +50,7 @@ const posts = sortPostByDate(await getCollection("blog",({ data }) => data.isDra
     <ul class="flex flex-col gap-8">
         {
             posts.map((post) => (
-                <a href={`/blog/${post.slug}`} class="flex flex-col gap-2">
+                <a href={`/blog/${post.id}`} class="flex flex-col gap-2">
                     <h2 class="text-lg font-medium md:text-xl text-neutral-100">
                         {post.data.title}
                     </h2>

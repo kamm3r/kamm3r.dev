@@ -9,13 +9,13 @@ type Props = {
 const {
   post: {
     data: { title, date },
-    slug,
+    id,
   },
 } = Astro.props;
 ---
 
 <a
-  href={`/blog/${slug}`}
+  href={`/blog/${id}`}
   class="border border-neutral-700 bg-neutral-800 rounded flex items-center justify-between px-3 py-4 w-full"
 >
   <div class="flex flex-col">

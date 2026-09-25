@@ -1,18 +1,18 @@
 ---
-import { CollectionEntry, getCollection } from "astro:content";
+import { getCollection, render, type CollectionEntry } from "astro:content";
 import Base from "../../layouts/Base.astro";
 
 export async function getStaticPaths() {
     const posts = await getCollection("blog");
     return posts.map((post) => ({
-        params: { slug: post.slug },
+        params: { slug: post.id },
         props: post,
     }));
 }
 type Props = CollectionEntry<"blog">;
 
 const post = Astro.props;
-const { Content } = await post.render();
+const { Content } = await render(post);
 ---
 
 <Base {...post.data}>
@@ -46,7 +46,7 @@ const { Content } = await post.render();
                         </p>
                     </div>
                 </div>
-                <div class="pt-4 pb-8 prose-neutral dark:prose-invert prose md:prose-lg">
+                <div class="w-full pt-4 pb-8 prose prose-neutral prose-invert md:prose-lg">
                     <Content />
                 </div>
                 <div class="text-sm text-neutral-300">

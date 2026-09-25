@@ -1,15 +1,17 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
-
-import tailwind from "@astrojs/tailwind";
+import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://kamm3r.dev',
-  integrations: [mdx({
+  markdown: {
     syntaxHighlight: 'shiki',
     shikiConfig: { theme: 'poimandres' }
-  }),
-  sitemap(), tailwind()]
+  },
+  integrations: [mdx(), sitemap()],
+  vite: {
+    plugins: [tailwindcss()]
+  }
 });
