@@ -1,0 +1,245 @@
+---
+title: Senkei 0.2.0 - Unity-like Gamedev Math for TypeScript
+description: Senkei got a full rewrite with a Unity-like API, a real Transform hierarchy, faster matrices, docs for every class and a lot of bug fixes
+date: 2026-9-25
+---
+import PerfChart from "../../components/PerfChart.astro"
+
+[Senkei](https://github.com/kamm3r/math) is my small math library for games in JavaScript and TypeScript. It has been sitting at 0.1.1 since 2023, and I finally gave it the update it deserved. Version 0.2.0 is pretty much a rewrite: the API now feels like Unity, the Transform actually works like a scene graph, and there are a lot of fixes and a proper test suite behind it.
+
+```bash
+npm install senkei
+```
+
+## Unity-like API
+
+If you have written C# in Unity, senkei should feel familiar. Everything uses PascalCase names like `Vec3.Lerp`, `Quaternion.Slerp`, `Mat4.TRS`, `Transform.LookAt` and `Mathf.Approximately`.
+
+```ts
+import { Vec3, Quaternion, Mat4, Transform, Mathf, Space } from 'senkei'
+
+const a = new Vec3(2, 4, 10)
+const b = new Vec3(34, 3, 2)
+
+const sum = Vec3.Add(a, b)
+const mid = Vec3.Lerp(a, b, 0.5)
+const dir = Vec3.Normalize(b)
+```
+
+Here's what that looks like in a game loop: a turret that turns towards an enemy at 90 degrees per second, and a player that walks towards a goal at 5 units per second.
+
+```ts
+const turnSpeed = 90 // degrees per second
+const moveSpeed = 5 // units per second
+
+function update(deltaTime: number) {
+  const toEnemy = Vec3.Subtract(enemy.position, turret.position)
+  const targetRotation = Quaternion.LookRotation(toEnemy)
+  turret.rotation = Quaternion.RotateTowards(
+    turret.rotation,
+    targetRotation,
+    turnSpeed * deltaTime
+  )
+
+  player.position = Vec3.MoveTowards(
+    player.position,
+    goal,
+    moveSpeed * deltaTime
+  )
+}
+```
+
+A lot of old method names got cleaned up too:
+
+- `mult`, `div`, `scalarMult`, `scalarDiv` and `MultiplyWithVector` are replaced by `Multiply` and `Divide`, which take either a scalar or a vector. Component-wise multiplication is `Scale`.
+- `Quaternion.Multiply` combines rotations or rotates a point. `Mat4.Multiply` multiplies matrices or transforms a `Vec4`.
+- `Transform.translation` / `localTranslation` are now `position` / `localPosition`.
+- `Mathf.Lerp` clamps `t` to 0..1 like Unity. Use `LerpUnclamped` if you want the raw blend.
+- `Vec2`, `Vec3` and `Vec4` now share the same naming table, with `normalized`, `SqrDistance`, `Clamp` and `ToVec2` / `ToVec3` / `ToVec4` conversions.
+
+The old names that conflicted are marked `@deprecated` rather than removed, so existing code keeps working while you migrate.
+
+## Transform hierarchy
+
+`Transform` was rewritten from scratch. It now has parents and children, world and local position / rotation / scale, and `Space.Self` / `Space.World` just like Unity.
+
+```ts
+const parent = new Transform()
+parent.position = new Vec3(10, 0, 0)
+
+const child = new Transform()
+child.SetParent(parent) // keeps world transform by default
+child.Translate(new Vec3(0, 0, -1), Space.Self)
+child.LookAt(new Vec3(0, 1, 5))
+
+const world = child.TransformPoint(new Vec3(1, 0, 0))
+```
+
+Children follow their parents, so a simple solar system is only a few lines. Rotating the sun carries the earth and the moon with it:
+
+```ts
+const sun = new Transform()
+
+const earth = new Transform()
+earth.SetParent(sun)
+earth.localPosition = new Vec3(10, 0, 0)
+
+const moon = new Transform()
+moon.SetParent(earth)
+moon.localPosition = new Vec3(2, 0, 0)
+
+sun.Rotate(new Vec3(0, 90, 0))
+
+console.log(moon.position) // Vec3 { x: 0, y: 0, z: -12 }
+```
+
+World matrices are cached and only recalculated when something in the chain moves, using dirty flags that propagate down the subtree. Reading `position` or `rotation` no longer walks the entire parent chain every time. `hasChanged` also propagates to children when an ancestor moves.
+
+Parenting a transform onto one of its own descendants now throws, instead of creating a cycle that would hang.
+
+## SmoothDamp without side effects
+
+`Vec2.SmoothDamp` and `Vec3.SmoothDamp` used to mutate the arguments you passed in. Now they return the new value and velocity, and you pass the velocity back in on the next frame:
+
+```ts
+let velocity = Vec3.zero
+
+function update(deltaTime: number) {
+  const result = Vec3.SmoothDamp(current, target, velocity, 0.3, 10, deltaTime)
+  current = result.value
+  velocity = result.velocity
+}
+```
+
+This also fixed the overshoot guard, which could never trigger before because of an aliased reference.
+
+## Predictable memory
+
+One of the biggest goals for this release was no hidden aliasing. The rules are simple:
+
+- **Static methods allocate:** `Vec3.Add(a, b)` returns a new vector and leaves `a` and `b` alone.
+- **Instance methods mutate:** `v.Normalize()` changes `v`.
+- **Getters return copies:** `magnitude`, `normalized`, `position` and `localToWorldMatrix` can't be used to corrupt internal state.
+
+```ts
+const a = new Vec3(3, 4, 0)
+
+const n = Vec3.Normalize(a) // n is (0.6, 0.8, 0), a is still (3, 4, 0)
+a.Normalize() // now a is (0.6, 0.8, 0)
+
+const t = new Transform()
+t.position = new Vec3(1, 2, 3)
+
+const p = t.position
+p.x = 100 // t.position is still (1, 2, 3)
+```
+
+Functions like `MoveTowards` and `ClampMagnitude` used to sometimes hand you back your own object. Now they always return a fresh one.
+
+## Explicit failures
+
+Instead of silently spreading `NaN` through your scene, senkei now fails loudly or handles edge cases the way Unity does:
+
+- Inverting a singular matrix throws.
+- `AngleBetween` guards against zero-length vectors.
+- `ProjectOnPlane` with a degenerate normal returns the vector unchanged, and `Vec4.Project` returns zero instead of `NaN`.
+- `ToAngleAxis` used to return nothing. It has been replaced by `ToAxisAngle`, which returns `{ axis, angle }` with the angle in radians.
+
+```ts
+try {
+  Mat4.zero.inverse
+} catch (e) {
+  // Error: Cannot invert matrix with zero determinant
+}
+
+try {
+  sun.SetParent(moon)
+} catch (e) {
+  // Error: Cannot parent a transform to one of its own descendants.
+}
+
+0.1 + 0.2 === 0.3 // false
+Mathf.Approximately(0.1 + 0.2, 0.3) // true
+
+Mathf.Lerp(0, 10, 1.5) // 10, clamped like Unity
+Mathf.LerpUnclamped(0, 10, 1.5) // 15
+```
+
+Degrees are used at the API boundary (`Euler`, `eulerAngles`, `AngleAxis`) and radians inside:
+
+```ts
+const { axis, angle } = Quaternion.AngleAxis(90, Vec3.up).toAxisAngle()
+// axis is (0, 1, 0), angle is 1.5707... (π / 2)
+```
+
+## Performance
+
+The two biggest wins are `Mat4.TRS` and the `Transform` hierarchy.
+
+- `Mat4.TRS` now computes translation × rotation × scale directly in a single allocation, instead of building three matrices and multiplying them together.
+- `Transform` caches its world matrices, so reading `position`, calling `TransformPoint` or reading `localToWorldMatrix` no longer walks up the whole parent chain every time.
+
+Here's the benchmark from `bench/perf.mjs`, run on the commit right before the performance work and on 0.2.0. The Transform numbers are for a leaf three levels deep in a hierarchy.
+
+<PerfChart
+    title="Time per operation, lower is better"
+    caption="Median of 3 runs, 200,000 iterations each. Node 24.15, AMD Ryzen 7 7800X3D."
+    beforeLabel="Before"
+    afterLabel="0.2.0"
+    unit="ns"
+    rows={[
+        { name: "Mat4.TRS", before: 147.0, after: 33.6 },
+        { name: "Transform.position", before: 235.4, after: 28.4 },
+        { name: "Transform.TransformPoint", before: 366.4, after: 21.0 },
+        { name: "Transform.localToWorldMatrix", before: 359.5, after: 13.7 },
+    ]}
+/>
+
+Everything else stayed about the same. Here's the full run on 0.2.0:
+
+```txt
+$ pnpm run benchmark
+Vec3.Add: 11.3 ns/op
+Vec3.Normalize: 14.6 ns/op
+Vec3.Dot+Cross: 10.3 ns/op
+Vec3.Angle: 21.6 ns/op
+Vec3.SmoothDamp: 31.2 ns/op
+Quat.Multiply(q,q): 14.8 ns/op
+Quat.Multiply(q,v): 19.4 ns/op
+Quat.Slerp: 40.5 ns/op
+Quat.LookRotation: 65.6 ns/op
+Quat.eulerAngles: 35.8 ns/op
+Mat4.Multiply: 58.0 ns/op
+Mat4.TRS: 33.9 ns/op
+Mat4.inverse: 54.4 ns/op
+Mat4.LookAt: 54.2 ns/op
+Transform.position x3 chain: 28.4 ns/op
+Transform.TransformPoint: 21.0 ns/op
+Transform.localToWorldMatrix: 15.2 ns/op
+Mathf.Lerp: 7.4 ns/op
+```
+
+You can run it yourself with `pnpm run benchmark`.
+
+## Bug fixes
+
+This release fixes a lot of bugs:
+
+- `Quaternion.Inverse` had the wrong sign on `w`, and `AngleAxis` now takes degrees.
+- `Slerp` no longer mutates its input.
+- `LookRotation` builds the correct basis, and `FromToRotation` handles opposite vectors.
+- `Mat4.Translate` used the wrong column layout, and `SetRow` / `SetColumn` / `SetTRS` now actually write their values.
+- Several `Vec3` / `Vec4` instance methods that did nothing now work, including `w` component handling on `Vec4`.
+- `Mathf.Approximately` now compares relative to the larger of the two values, like Unity.
+
+## New additions
+
+- `Vec3.OrthoNormalize`
+- `Quaternion.RotateTowards` and `LerpUnclamped`
+- `Mat4.clone()`
+- `Mathf` and `Space` are exported from the package entry
+- Static direction helpers like `Vec3.up`, `Vec3.forward`, `Vec3.right` and `Vec3.zero`
+
+## Conclusion
+
+Senkei is finally in a state where I'm happy to use it in my own projects, like my physics engine [butsuri](/blog/butsuri-physics-engine-typescript). If you are making games in TypeScript and miss Unity's math API, give it a try. There are [docs](https://github.com/kamm3r/math/tree/main/docs) for every class to get you started. Let me know what you think on [GitHub](https://github.com/kamm3r/math).
