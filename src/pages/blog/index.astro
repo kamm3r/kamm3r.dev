@@ -1,8 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
-import { formatDate } from "../../utils/date";
+import PostCard from "../../components/PostCard.astro";
 import { getPublishedPosts } from "../../utils/posts";
-import { readingTime } from "../../utils/readingTime";
 
 const posts = await getPublishedPosts();
 ---
@@ -52,21 +51,11 @@ const posts = await getPublishedPosts();
     >
         All Posts
     </h2>
-    <ul id="post-list" class="flex flex-col gap-8 pb-16">
+    <ul id="post-list" class="flex flex-col gap-3 pb-16">
         {
             posts.map((post) => (
                 <li data-search={`${post.data.title} ${post.data.description}`.toLowerCase()}>
-                    <a href={`/blog/${post.id}`} class="group flex flex-col gap-2">
-                        <h3 class="text-lg font-medium md:text-xl text-neutral-100 group-hover:underline underline-offset-4">
-                            {post.data.title}
-                        </h3>
-                        <p class="text-neutral-400">{post.data.description}</p>
-                        <p class="text-sm text-neutral-500">
-                            <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
-                            {" · "}
-                            {readingTime(post.body)}
-                        </p>
-                    </a>
+                    <PostCard {post} showDescription />
                 </li>
             ))
         }

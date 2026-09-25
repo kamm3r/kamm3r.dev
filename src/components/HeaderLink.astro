@@ -16,8 +16,11 @@ const isActive =
     href={href}
     aria-current={isActive ? "page" : undefined}
     class:list={[
-        "text-lg rounded-lg hover:opacity-100 transition-opacity",
-        isActive ? "font-bold" : "opacity-80",
+        // Weight never changes between states, so the nav doesn't shift between pages.
+        "text-lg rounded-sm underline-offset-8 decoration-2 transition-colors",
+        isActive
+            ? "text-neutral-50 underline decoration-accent"
+            : "text-neutral-400 hover:text-neutral-100",
         className,
     ]}
     {...props}

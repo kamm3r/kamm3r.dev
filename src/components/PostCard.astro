@@ -5,24 +5,27 @@ import { readingTime } from "../utils/readingTime";
 
 type Props = {
   post: CollectionEntry<"blog">;
+  showDescription?: boolean;
 };
 
 const {
   post: {
-    data: { title, date },
+    data: { title, description, date },
     id,
     body,
   },
+  showDescription = false,
 } = Astro.props;
 ---
 
 <a
   href={`/blog/${id}`}
-  class="group border border-neutral-700 bg-neutral-800 rounded flex hover:border-neutral-500 transition-colors items-center justify-between px-3 py-4 w-full"
+  class="group border border-neutral-700 bg-neutral-800 rounded flex hover:border-neutral-500 transition-colors items-center justify-between gap-4 px-3 py-4 w-full"
 >
-  <div class="flex flex-col">
-    <p class="text-neutral-100">{title}</p>
-    <span class="opacity-60">
+  <div class="flex flex-col gap-1">
+    <h3 class="text-neutral-100">{title}</h3>
+    {showDescription && <p class="text-neutral-400">{description}</p>}
+    <span class="text-neutral-500 text-sm">
       <time datetime={date.toISOString()}>{formatDate(date)}</time> · {readingTime(body)}
     </span>
   </div>

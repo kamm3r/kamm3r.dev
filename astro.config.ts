@@ -3,6 +3,9 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { readdirSync, readFileSync } from 'node:fs';
+import { satteri } from '@astrojs/markdown-satteri';
+import { proseEnhancements } from './src/plugins/prose-enhancements';
+import { codeTheme } from './src/plugins/code-theme';
 
 // Draft pages are still built so they can be shared by link, but keep them out of the sitemap.
 const draftSlugs = readdirSync('./src/content/blog')
@@ -29,7 +32,8 @@ export default defineConfig({
   ],
   markdown: {
     syntaxHighlight: 'shiki',
-    shikiConfig: { theme: 'poimandres' }
+    shikiConfig: { theme: codeTheme },
+    processor: satteri({ hastPlugins: [proseEnhancements] })
   },
   integrations: [
     mdx(),
