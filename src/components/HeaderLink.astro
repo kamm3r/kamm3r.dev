@@ -5,15 +5,21 @@ type Props = HTMLAttributes<"a">;
 
 const { href, class: className, ...props } = Astro.props;
 
-const { pathname } = Astro.url;
-const isActive = href === pathname || href === pathname.replace(/\/$/, "");
+const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
+// Keep a section highlighted on its sub-pages too, e.g. "Blog" while reading a post.
+const isActive =
+    typeof href === "string" &&
+    (href === pathname || (href !== "/" && pathname.startsWith(`${href}/`)));
 ---
 
 <a
     href={href}
-    class={`${
-        isActive ? "font-bold text-lg" : "text-lg opacity-80"
-    } hidden md:inline-block rounded-lg hover:opacity-100 transition-all`}
+    aria-current={isActive ? "page" : undefined}
+    class:list={[
+        "text-lg rounded-lg hover:opacity-100 transition-opacity",
+        isActive ? "font-bold" : "opacity-80",
+        className,
+    ]}
     {...props}
 >
     <slot />

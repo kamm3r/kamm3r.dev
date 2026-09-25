@@ -5,9 +5,9 @@ import HeaderLink from "./HeaderLink.astro";
 <header
     class="flex flex-row justify-between items-center py-6 sm:pb-16 z-10 mx-auto px-8 md:px-0 w-full"
 >
-    <figure class="flex justify-center items-center">
-        <img src="/splat.svg" class="w-6 h-6" alt="logo" />
-    </figure>
+    <a href="/" class="flex justify-center items-center" aria-label="Home">
+        <img src="/splat.svg" class="w-6 h-6" alt="" width="24" height="24" />
+    </a>
     <nav class="flex gap-6">
         <HeaderLink href="/">Home</HeaderLink>
         <HeaderLink href="/blog">Blog</HeaderLink>

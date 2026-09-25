@@ -4,11 +4,13 @@ import { z } from "astro/zod"
 
 const blog = defineCollection({
     loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/blog" }),
-    schema: z.object({
+    schema: ({ image }) => z.object({
         isDraft: z.boolean().optional().default(false),
         title: z.string(),
         description: z.string(),
         date: z.string().transform(str => new Date(str)),
+        // Used as the social share image.
+        cover: image().optional(),
     }),
 })
 

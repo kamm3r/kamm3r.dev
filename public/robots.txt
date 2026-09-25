@@ -1,2 +1,4 @@
 User-agent: *
-Sitemap: https://kamm3r.dev/sitemap.xml
+Allow: /
+
+Sitemap: https://kamm3r.dev/sitemap-index.xml
