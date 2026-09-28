@@ -1,26 +1,33 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { formatDate } from "../utils/date";
+import { readingTime } from "../utils/readingTime";
 
 type Props = {
   post: CollectionEntry<"blog">;
+  showDescription?: boolean;
 };
 
 const {
   post: {
-    data: { title, date },
+    data: { title, description, date },
     id,
+    body,
   },
+  showDescription = false,
 } = Astro.props;
 ---
 
 <a
   href={`/blog/${id}`}
-  class="border border-neutral-700 bg-neutral-800 rounded flex items-center justify-between px-3 py-4 w-full"
+  class="group border border-neutral-700 bg-neutral-800 rounded flex hover:border-neutral-500 transition-colors items-center justify-between gap-4 px-3 py-4 w-full"
 >
-  <div class="flex flex-col">
-    <p class="text-neutral-100">{title}</p>
-    <span class="opacity-60">{formatDate(date)}</span>
+  <div class="flex flex-col gap-1">
+    <h3 class="text-neutral-100">{title}</h3>
+    {showDescription && <p class="text-neutral-400">{description}</p>}
+    <span class="text-neutral-500 text-sm">
+      <time datetime={date.toISOString()}>{formatDate(date)}</time> · {readingTime(body)}
+    </span>
   </div>
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -32,7 +39,8 @@ const {
     stroke-width="2"
     stroke-linecap="round"
     stroke-linejoin="round"
-    class="lucide lucide-arrow-up-right text-neutral-300"
+    aria-hidden="true"
+    class="lucide lucide-arrow-up-right shrink-0 text-neutral-300 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
     ><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path>
   </svg>
 </a>

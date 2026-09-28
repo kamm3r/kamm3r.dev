@@ -5,15 +5,24 @@ type Props = HTMLAttributes<"a">;
 
 const { href, class: className, ...props } = Astro.props;
 
-const { pathname } = Astro.url;
-const isActive = href === pathname || href === pathname.replace(/\/$/, "");
+const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
+// Keep a section highlighted on its sub-pages too, e.g. "Blog" while reading a post.
+const isActive =
+    typeof href === "string" &&
+    (href === pathname || (href !== "/" && pathname.startsWith(`${href}/`)));
 ---
 
 <a
     href={href}
-    class={`${
-        isActive ? "font-bold text-lg" : "text-lg opacity-80"
-    } hidden md:inline-block rounded-lg hover:opacity-100 transition-all`}
+    aria-current={isActive ? "page" : undefined}
+    class:list={[
+        // Weight never changes between states, so the nav doesn't shift between pages.
+        "text-lg rounded-sm underline-offset-8 decoration-2 transition-colors",
+        isActive
+            ? "text-neutral-50 underline decoration-accent"
+            : "text-neutral-400 hover:text-neutral-100",
+        className,
+    ]}
     {...props}
 >
     <slot />
