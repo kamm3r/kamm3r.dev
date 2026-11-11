@@ -1,0 +1,84 @@
+---
+title: How I run a 27B model with 128K context on consumer AMD hardware
+description: Qwen3.8-27B (EXL3) on a Radeon RX 7900 XTX — unpatched TabbyAPI, official ExLlamaV3 ROCm 10 wheels, no compiling, no NVIDIA
+date: "2026-11-11"
+---
+
+Running a serious local LLM used to mean two things: an NVIDIA card, and a weekend of
+fighting ROCm. I wanted neither. This is the recipe that finally made it boring.
+
+**The setup:** [Qwen3.8-27B](https://huggingface.co/turboderp/Qwen3.8-27B-exl3) quantized to
+EXL3, served as an OpenAI-compatible API from a single Radeon RX 7900 XTX (24 GB), with
+128K context, thinking, tool calling, and image input. Everything runs on
+[**unpatched, upstream** TabbyAPI](https://github.com/theroyallab/tabbyAPI) with the
+**official ExLlamaV3 1.6.3 ROCm 10 wheels** — nothing to compile, no system-wide ROCm
+install, just the in-kernel `amdgpu` driver.
+
+## Why this took so long to become possible
+
+If you've tried local inference on AMD before, you know the ritual: find some
+six-month-old fork, patch it, pin a fork of a fork, install ROCm and hope your kernel
+and PyTorch versions are in the compatibility matrix, watch it OOM, repeat.
+
+That's over. ExLlamaV3 now ships official ROCm 10 wheels, and TabbyAPI works with them
+**unpatched**. The whole stack is pip-installable. The full recipe is in my repo —
+[kamm3r/exl3-rdna3-recipe](https://github.com/kamm3r/exl3-rdna3-recipe) — and it's
+three commands:
+
+```bash
+setup/install.sh          # pinned TabbyAPI + ROCm wheels in a venv
+setup/download_model.sh   # pinned 4.0 bpw weights
+serve/run.sh              # http://127.0.0.1:5000/v1
+```
+
+## The recipes
+
+| Recipe | Weights | Context / KV cache | Decode | Peak VRAM |
+|---|---|---|---|---|
+| **4.0bpw-128k** (default) | 4.0 bpw (16 GB) | 128K, 8-bit | 86.1 tok/s | ~21.0 GB |
+| **4.0bpw-256k** | 4.0 bpw (16 GB) | 256K, 4-bit | 87.8 tok/s | ~21.7 GB |
+| **3.0bpw-256k** | 3.0 bpw (13.5 GB) | 256K, 8-bit K / 6-bit V | 93.5 tok/s | ~21.6 GB |
+
+All three keep vision, thinking (`reasoning_content`), tool calls, and the model's
+built-in MTP head as the draft. The 4.0 bpw weights are the better model; 3.0 bpw is a
+bit faster and holds higher-precision cache at 256K.
+
+Numbers are means of passing runs, not cherry-picked single benchmarks — more on that below.
+Prefill at 256K is about 680 tok/s, so a 213K-token recall prompt takes roughly five
+minutes. Fine for document Q&A, not for chat-style back-and-forth at that depth.
+
+## "Passing" means something specific
+
+I don't trust vibes-based benchmarks, so every configuration had to pass six gates
+before it counted: the server loads, answers, thinks in a separate
+`reasoning_content`, calls a tool, recalls code planted at 85% of the context window,
+and decodes at 15 tok/s or more. Each run also had to pass an image check. I ran the
+[local-ai-registry](https://github.com/sybil-solutions/local-ai-registry) lab seven
+times against the default recipe — all seven passed every gate.
+
+That's also where the one interesting tuning knob came from: `draft_num_tokens`. The
+model has a single MTP layer, so drafting more than 3 tokens reuses it and acceptance
+drops — the default of 4 averaged 78.9 tok/s versus 86.1 at 3. One line, ~9% speed.
+
+## Gotchas worth knowing
+
+- **VRAM budget is tight but real.** ~21 GB of 24 GB is used; you keep ~3 GB free with
+  a desktop on the same card. A browser with many tabs can eat a GB — several cache
+  configs that *would* have passed left less headroom, and one crashed exactly that
+  way. They're excluded from the recipe on purpose.
+- **Vision encoder weights stay in system RAM** (`vision_offload`) — that's what buys
+  the context room.
+- **Ryzen 7000/9000 desktop APUs:** ROCm sees the iGPU as a second device. Check
+  `rocminfo` that device 0 is actually your discrete card before blaming the recipe.
+- Only the 7900 XTX (gfx1100) is tested; other RDNA3 cards can try
+  `GFX=gfx1101 setup/install.sh`.
+
+## What this is good for
+
+A localhost-only, OpenAI-compatible endpoint that thinks, calls tools, sees images,
+and fits a codebase or a document archive in context — on a GPU you can buy for
+around €900. For a solo business or a small team with data that shouldn't leave the
+building, that's the whole stack: no API bills, no data egress, no NVIDIA.
+
+If you want this set up on your own hardware — or an office server version of it —
+that's now a fixed-scope engagement I offer. [Get in touch.](mailto:kamm3r@proton.me)
