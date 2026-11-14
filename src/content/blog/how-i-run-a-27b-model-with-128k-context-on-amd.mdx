@@ -1,0 +1,262 @@
+---
+title: How I run a 27B model with 128K context on consumer AMD hardware
+description: My tested Qwen3.8-27B and Qwen3.5-9B setups on a Radeon RX 7900 XTX, with up to 256K context, image input, tool calling and an OpenAI-compatible API. Plus why Flash-Next doesn't fit.
+date: "2026-11-13"
+---
+
+import BarChart from "../../components/BarChart.astro"
+
+I have [Qwen3.8-27B](https://huggingface.co/turboderp/Qwen3.8-27B-exl3) running on a
+single Radeon RX 7900 XTX with 24 GB of VRAM. The default setup gives me 128K context,
+image input, thinking and tool calling, with an average decode speed of **86.1 tokens
+per second across seven passing test runs**.
+
+Since then I've tested the other two models in the repo. [Qwen3.5-9B](https://huggingface.co/turboderp/Qwen3.5-9B-exl3)
+passed every check at up to 256K context and reads long prompts about three times
+faster than the 27B. Qwen3.8-Flash-Next doesn't fit on this card at all.
+
+Everything runs on [TabbyAPI](https://github.com/theroyallab/tabbyAPI) with EXL3-quantized
+weights and the official ExLlamaV3 1.6.3 ROCm 10 wheels. I didn't need to patch TabbyAPI,
+build the inference engine or install ROCm system-wide. The GPU uses the in-kernel
+`amdgpu` driver; the Python environment contains the pinned runtime dependencies.
+
+The setup scripts and configurations are in
+[kamm3r/exl3-rdna3-recipe](https://github.com/kamm3r/exl3-rdna3-recipe).
+This post covers what I tested, the settings I settled on and the limits worth
+knowing before you try it.
+
+## Getting it running
+
+My test machine has a Ryzen 7 7800X3D, 32 GB of RAM and an RX 7900 XTX. The 27B runs
+were on Nobara 44 with kernel 7.2; the 9B runs were on Omarchy with kernel 7.2.15. The
+recipe pins TabbyAPI, ExLlamaV3 and PyTorch, so you don't have to find a working
+combination of versions yourself.
+
+You'll need git, [uv](https://docs.astral.sh/uv/), GCC or Clang (Triton compiles a few
+helpers on first use), membership in the `render` and `video` groups, and roughly 35 GB
+of disk space for the default weights and Python environment. From a terminal:
+
+```bash
+git clone https://github.com/kamm3r/exl3-rdna3-recipe
+cd exl3-rdna3-recipe
+setup/install.sh          # install the pinned stack in a virtual environment
+setup/download_model.sh   # download the pinned 27B 4.0 bpw weights
+serve/run.sh              # start the local server
+```
+
+For the 9B, download and start it by name instead:
+
+```bash
+setup/download_model.sh 9b-6.0
+serve/run.sh 9b-6.0bpw-256k
+```
+
+The OpenAI-compatible API is at `http://127.0.0.1:5000/v1`, with a chat page at `/ui`.
+The server only listens on localhost by default, so point a compatible client at
+that address.
+
+## Three 27B configurations that passed
+
+I started with 4.0 bits per weight (bpw) and 128K context. That's the default I'd
+try first. I also tested two configurations with a 256K context window:
+
+| Recipe | Weights | Context / KV cache | Mean decode | Passing runs | Peak card VRAM |
+|---|---|---|---|---|---|
+| **4.0bpw-128k** (default) | 4.0 bpw (16 GB) | 128K, 8-bit | 86.1 tok/s | 7 | ~21.0 GB |
+| **4.0bpw-256k** | 4.0 bpw (16 GB) | 256K, 4-bit | 87.8 tok/s | 3 | ~21.7 GB |
+| **3.0bpw-256k** | 3.0 bpw (13.5 GB) | 256K, 8-bit K / 6-bit V | 93.5 tok/s | 4 | ~21.6 GB |
+
+All three keep image input, thinking through `reasoning_content`, tool calling
+and speculative decoding with the model's built-in multi-token prediction (MTP) head.
+The vision encoder stays in system RAM through `vision_offload` to leave more room
+on the GPU.
+
+At 256K there's a memory tradeoff: 4.0 bpw keeps more precision in the model weights,
+while 3.0 bpw leaves room for a higher-precision KV cache. My checks don't tell you
+which gives better answers on your workload.
+
+The speed figures only measure token generation, not the time spent reading a long
+input. At 256K, prefill was about 680 tokens per second, so the 213K-token recall
+prompt took roughly five minutes. A large context window fits, but filling it is
+still slow.
+
+## What I checked
+
+For each 27B configuration, I used the
+[local-ai-registry](https://github.com/sybil-solutions/local-ai-registry) lab to
+check that the server:
+
+1. Loads the model.
+2. Answers a prompt.
+3. Returns thinking in a separate `reasoning_content` field.
+4. Produces a tool call.
+5. Recalls a code planted at 85% of the context window.
+6. Generates at least 15 tokens per second.
+
+Each run also included an image check. The default recipe passed all six gates
+and the image check in all seven runs.
+
+These are functional checks. They show the features work in this setup; they don't
+measure coding ability, reliable tool use across a whole task, or understanding of
+every document that fits in the window. The recall test finds one planted code,
+which is a narrower claim.
+
+## The setting that made a difference
+
+The useful tuning change was `draft_num_tokens: 3`.
+
+The MTP head drafts tokens that the main model then checks. Drafting more only helps
+when enough of them are accepted. This model has a single MTP layer, so every extra
+draft token reuses it and gets accepted less often.
+
+With the default of 4, six runs averaged 78.9 tokens per second. With 3, the seven
+runs above averaged 86.1: about a **9% improvement**. Individual runs varied, so
+treat that as a result for this setup and workload, not a universal setting.
+
+## Qwen3.5-9B: smaller, and much faster to read
+
+The 9B config in the repo started as an untested scaffold, and one of its assumptions
+was wrong. I'd marked it text-only, but the pinned quant ships a vision encoder, and
+ExLlamaV3 1.6.3 supports it. All three 9B recipes now keep image input on the GPU.
+These quants have no MTP head, so there's no speculative decoding.
+
+| Recipe | Weights | Context / KV cache | Mean decode | Long prefill | Peak card VRAM |
+|---|---|---|---|---|---|
+| **9b-6.0bpw-256k** (default) | 6 bpw (8.9 GB) | 256K, 8-bit | 82.7 tok/s | 2,220 tok/s | 17.9 GiB |
+| **9b-6.0bpw-128k** | 6 bpw (8.9 GB) | 128K, 8-bit | 79.7 tok/s | 3,093 tok/s | 15.3 GiB |
+| **9b-4.0bpw-128k** | 4 bpw (7.2 GB) | 128K, 8-bit | 95.5 tok/s | 3,104 tok/s | 13.6 GiB |
+
+I tested these with my own harness, which goes a bit further than the lab. Each run
+checks an answer, separate reasoning, a tool call plus its follow-up, six image inputs
+(colour and position checks, OCR and a 1536×1024 quadrant image), 1,024 tokens of
+generation, and exact recall of a random code planted 85% of the way into a prompt
+that fills 85% of the window. Every config passed three full runs: **108 scored checks,
+54 of them vision, with no failures**.
+
+Decode speed lands in the same range as the 27B. That's less surprising than it looks:
+the 27B gets help from MTP drafting and the 9B doesn't. The 4 bpw quant is about 20%
+faster than 6 bpw, and these tests don't show how much quality it gives up for that.
+The 6 bpw 256K config decoded slightly faster than the 128K one; my desktop was in use
+throughout, so I wouldn't read much into that gap.
+
+<BarChart
+    title="Decode speed by configuration"
+    unit="tok/s"
+    series={["Qwen3.8-27B", "Qwen3.5-9B"]}
+    rows={[
+        { name: "27B 4.0bpw-128k", values: [86.1], series: 0 },
+        { name: "27B 4.0bpw-256k", values: [87.8], series: 0 },
+        { name: "27B 3.0bpw-256k", values: [93.5], series: 0 },
+        { name: "9B 6.0bpw-256k", values: [82.7], series: 1 },
+        { name: "9B 6.0bpw-128k", values: [79.7], series: 1 },
+        { name: "9B 4.0bpw-128k", values: [95.5], series: 1 },
+    ]}
+    caption="Mean of passing runs on the RX 7900 XTX. The 27B used the local-ai-registry lab with MTP drafting; the 9B used my own harness (short prompt, 1,024 tokens, no drafting). Compare the two models loosely."
+/>
+
+Where the 9B really pulls ahead is prefill. It read a 111K-token prompt in about
+**36 seconds**; the 27B needed 114 seconds for 106K. At 256K the gap is bigger: the 9B
+got through a 222K-token prompt in about **101 seconds**, against roughly five minutes
+for the 27B's 213K. If you paste whole codebases or long documents, that's the number
+you'll feel.
+
+The 9B also leaves plenty of room on the card. The peaks above include about 4.4 GiB
+my desktop and browser were already using before the server started, which is a lot
+more than during the 27B runs. Even so, the 256K config left 6 GiB free.
+
+<BarChart
+    title="Qwen3.5-9B whole-card VRAM at peak"
+    unit="GiB"
+    stacked
+    series={["In use before the server started", "Added by the server"]}
+    rows={[
+        { name: "9B 6.0bpw-256k", values: [4.37, 13.56] },
+        { name: "9B 6.0bpw-128k", values: [4.36, 10.94] },
+        { name: "9B 4.0bpw-128k", values: [4.33, 9.3] },
+    ]}
+    reference={{ value: 23.98, label: "Card total" }}
+    caption="Sampled every 100 ms during three runs per config; very brief peaks may be missed. The first segment is whatever the desktop and browser were using when the harness started."
+/>
+
+Two settings came out of tuning:
+
+- **`chunk_size: 4096`.** In repeated cold-prompt tests at 128K, prefill was about 5.5%
+  faster than 2,048, for roughly 376 MiB more VRAM. 8,192 and 16,384 were slower.
+- **`sysmem_recurrent_cache: 1024`** on the 256K config. Upstream keeps up to 4 GiB of
+  prompt checkpoints in system RAM. With that default, a three-run 256K session still
+  passed, but swap use crept up by about half a gigabyte. Capping it at 1 GiB keeps fewer
+  old checkpoints in exchange for leaving more RAM to the desktop.
+
+The configs also set Qwen's recommended thinking defaults: temperature 1.0, top-p 0.95,
+top-k 20 and presence penalty 1.5. Clients can override them.
+
+I'd start with **6 bpw at 256K** for the full native window. Pick 6 bpw at 128K if you
+want faster long prefill and more headroom, or 4 bpw at 128K if decode speed matters
+more than precision.
+
+## Flash-Next doesn't fit
+
+Qwen3.8-Flash-Next has 6B active parameters, which sounds like it should
+run on a 24 GB card. The active count only describes compute per token, though. The
+weights still have to live somewhere, and the language model has 125B of them.
+
+Before downloading anything, I checked the pinned 3.18 bpw quant's file listing and the
+headers of all seven weight files:
+
+<BarChart
+    title="Qwen3.8-Flash-Next 3.18 bpw vs. the card"
+    unit="GiB"
+    decimals={1}
+    series={["Size"]}
+    rows={[
+        { name: "Main weights", values: [50.75] },
+        { name: "Trunk only", values: [48.03] },
+        { name: "N-gram table", values: [48.28] },
+    ]}
+    reference={{ value: 23.98, label: "RX 7900 XTX" }}
+    caption="From the pinned quant's safetensors headers and file metadata. The n-gram embedding table is a separate file on top of the main weights."
+/>
+
+The trunk weights alone are twice the card's memory, before any KV cache, vision encoder
+or desktop. Cutting context or turning off vision and MTP can't fix that. Running it would
+mean streaming weights from system RAM or disk, and I'm only keeping recipes that run
+entirely on the GPU.
+
+So the Flash-Next config stays in the repo, marked incompatible with this card. I didn't
+download the weights or start a server for it, so I have no speed or quality numbers
+for it.
+
+## Leave room for the desktop
+
+The VRAM numbers cover the whole card, including the desktop. The default 27B recipe
+peaked at about 21 GB, leaving roughly 3 GB free. A browser with many tabs can easily
+use another GB, so your headroom depends on what else you have open.
+
+I left tighter 27B configurations out of the recipe. One using 3.5 bpw weights and an
+8-bit cache at 256K crashed when desktop usage reached 1.2 GB. Loading once wasn't
+enough for me to recommend it.
+
+If your machine has an AMD integrated GPU, check which device ROCm picks.
+`HIP_VISIBLE_DEVICES` defaults to `0` in the recipe; use `rocminfo` to confirm that
+index is your discrete card.
+
+## Limits
+
+I've only tested the RX 7900 XTX (`gfx1100`). Other RDNA3 cards, distributions and
+driver stacks still need testing.
+
+Everything here is one request at a time on a shared desktop, with small acceptance
+suites. The 9B vision checks used synthetic colour, layout and text images up to
+1536×1024, not photos, video or several images at once. Recall was tested around 85%
+of each window, not at every length up to the limit. None of this measures general
+answer quality.
+
+## Where this leaves me
+
+I now have two tested local models on hardware I already own. The 27B is the larger
+model, with MTP drafting and up to 256K context. The 9B fits with lots of room to spare
+and read a 222K-token prompt in under two minutes, against about five for the 27B. Both come with pinned
+versions and tested configs, so you can reproduce them rather than start from scratch.
+
+If you'd like help setting up local inference on your own hardware,
+[get in touch](mailto:kamm3r@proton.me).
